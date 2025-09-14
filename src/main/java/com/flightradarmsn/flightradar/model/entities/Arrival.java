@@ -11,7 +11,10 @@ import java.util.Objects;
 @Embeddable
 public class Arrival implements Serializable {
 
-    private String airport ;
+    @ManyToOne
+    @JoinColumn(name = "arrival_airport_id")
+    private Airport airport ;
+
     private String timezone;
     private String iata;
     private String icao;
@@ -27,11 +30,11 @@ public class Arrival implements Serializable {
     public Arrival() {
     }
 
-    public String getAirport() {
+    public Airport getAirport() {
         return airport;
     }
 
-    public void setAirport(String airport) {
+    public void setAirport(Airport airport) {
         this.airport = airport;
     }
 

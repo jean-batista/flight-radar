@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class ArrivalDTO implements Serializable {
 
-    private String airport ;
+    private AirportDTO airport ;
     private String timezone;
     private String iata;
     private String icao;
@@ -31,11 +31,11 @@ public class ArrivalDTO implements Serializable {
     public ArrivalDTO() {
     }
 
-    public String getAirport() {
+    public AirportDTO getAirport() {
         return airport;
     }
 
-    public void setAirport(String airport) {
+    public void setAirport(AirportDTO airport) {
         this.airport = airport;
     }
 

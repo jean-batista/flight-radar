@@ -17,6 +17,24 @@ CREATE TABLE IF NOT EXISTS tb_aircraft (
     icao24 VARCHAR(20)
 );
 
+-- Tabela para armazenar os aerportos (Airports)
+-- Esta também é uma entidade independente
+CREATE TABLE IF NOT EXISTS tb_airport (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    iata VARCHAR(10),
+    icao VARCHAR(10),
+    latitude DOUBLE,
+    longitude DOUBLE,
+    geoname_id BIGINT,
+    timezone VARCHAR(50),
+    gmt INT,
+    phone_number VARCHAR(50),
+    country_name VARCHAR(50),
+    country_iso2 VARCHAR(10),
+    city_iata_code VARCHAR(10)
+);
+
 -- Tabela principal para os planos de voo (FlightPlan)
 -- Contém os campos próprios e os campos das classes embutidas (Embedded).
 CREATE TABLE IF NOT EXISTS tb_flight_plan (
@@ -26,7 +44,6 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     flight_status VARCHAR(255),
 
     -- Campos embutidos (Embedded) de Departure com prefixo
-    departure_airport VARCHAR(255),
     departure_timezone VARCHAR(255),
     departure_iata VARCHAR(10),
     departure_icao VARCHAR(10),
@@ -40,7 +57,6 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     departure_actual_runway VARCHAR(255),
 
     -- Campos embutidos (Embedded) de Arrival com prefixo
-    arrival_airport VARCHAR(255),
     arrival_timezone VARCHAR(255),
     arrival_iata VARCHAR(10),
     arrival_icao VARCHAR(10),
@@ -73,10 +89,14 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     -- Chaves Estrangeiras para as entidades relacionadas
     airline_id BIGINT,
     aircraft_id BIGINT,
+    departure_airport_id BIGINT,
+    arrival_airport_id BIGINT,
 
     -- Definição das constraints de Chave Estrangeira
     FOREIGN KEY (airline_id) REFERENCES tb_airline(id),
-    FOREIGN KEY (aircraft_id) REFERENCES tb_aircraft(id)
+    FOREIGN KEY (aircraft_id) REFERENCES tb_aircraft(id),
+    FOREIGN KEY (departure_airport_id) REFERENCES tb_airport(id),
+    FOREIGN KEY (arrival_airport_id) REFERENCES tb_airport(id)
 );
 
 -- Tabela para a coleção de pontos da trajetória (Trail)

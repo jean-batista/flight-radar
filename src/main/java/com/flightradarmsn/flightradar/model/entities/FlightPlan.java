@@ -1,6 +1,5 @@
 package com.flightradarmsn.flightradar.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,7 +19,6 @@ public class FlightPlan implements Serializable {
     @Embedded
     @Column(length = 1024)
     @AttributeOverrides({
-            @AttributeOverride(name = "airport", column = @Column(name = "departure_airport")),
             @AttributeOverride(name = "timezone", column = @Column(name = "departure_timezone")),
             @AttributeOverride(name = "iata", column = @Column(name = "departure_iata")),
             @AttributeOverride(name = "icao", column = @Column(name = "departure_icao")),
@@ -38,7 +36,6 @@ public class FlightPlan implements Serializable {
     @Embedded
     @Column(length = 1024)
     @AttributeOverrides({
-            @AttributeOverride(name = "airport", column = @Column(name = "arrival_airport")),
             @AttributeOverride(name = "timezone", column = @Column(name = "arrival_timezone")),
             @AttributeOverride(name = "iata", column = @Column(name = "arrival_iata")),
             @AttributeOverride(name = "icao", column = @Column(name = "arrival_icao")),
