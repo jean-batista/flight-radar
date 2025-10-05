@@ -35,6 +35,25 @@ CREATE TABLE IF NOT EXISTS tb_airport (
     city_iata_code VARCHAR(10)
 );
 
+-- Tabela de rotas
+CREATE TABLE IF NOT EXISTS tb_route (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(10),
+    origin_airport_id BIGINT,
+    destination_airport_id BIGINT
+);
+
+-- Tabela de pontos da rota
+CREATE TABLE IF NOT EXISTS tb_route_waypoints (
+    route_id BIGINT NOT NULL,
+    latitude DOUBLE,
+    longitude DOUBLE,
+    direction DOUBLE,
+
+    -- Chave Estrangeira ligando cada ponto ao seu respectivo FlightPlan
+    FOREIGN KEY (route_id) REFERENCES tb_route(id)
+);
+
 -- Tabela principal para os planos de voo (FlightPlan)
 -- Contém os campos próprios e os campos das classes embutidas (Embedded).
 CREATE TABLE IF NOT EXISTS tb_flight_plan (
@@ -91,32 +110,12 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     aircraft_id BIGINT,
     departure_airport_id BIGINT,
     arrival_airport_id BIGINT,
+    route_id BIGINT,
 
     -- Definição das constraints de Chave Estrangeira
     FOREIGN KEY (airline_id) REFERENCES tb_airline(id),
     FOREIGN KEY (aircraft_id) REFERENCES tb_aircraft(id),
     FOREIGN KEY (departure_airport_id) REFERENCES tb_airport(id),
-    FOREIGN KEY (arrival_airport_id) REFERENCES tb_airport(id)
-);
-
--- Tabela para a coleção de pontos da trajetória (Trail)
--- Criada pela anotação @ElementCollection na entidade Live
-CREATE TABLE IF NOT EXISTS tb_trail_points (
-    flight_plan_id BIGINT NOT NULL,
-    latitude DOUBLE,
-    longitude DOUBLE,
-
-    -- Chave Estrangeira ligando cada ponto ao seu respectivo FlightPlan
-    FOREIGN KEY (flight_plan_id) REFERENCES tb_flight_plan(id)
-);
-
--- Tabela para a coleção de pontos da trajetória prevista (Predicted Trail)
--- Criada pela anotação @ElementCollection na entidade Live
-CREATE TABLE IF NOT EXISTS tb_predicted_trail_points (
-    flight_plan_id BIGINT NOT NULL,
-    latitude DOUBLE,
-    longitude DOUBLE,
-
-    -- Chave Estrangeira ligando cada ponto ao seu respectivo FlightPlan
-    FOREIGN KEY (flight_plan_id) REFERENCES tb_flight_plan(id)
+    FOREIGN KEY (arrival_airport_id) REFERENCES tb_airport(id),
+    FOREIGN KEY (route_id) REFERENCES tb_route(id)
 );

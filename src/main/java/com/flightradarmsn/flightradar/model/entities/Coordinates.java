@@ -6,12 +6,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class Trail implements Serializable {
+public class Coordinates implements Serializable {
 
     private Double latitude;
     private Double longitude;
+    public Double direction;
 
-    public Trail() {
+    public Coordinates() {
     }
 
     public Double getLatitude() {
@@ -30,15 +31,23 @@ public class Trail implements Serializable {
         this.longitude = longitude;
     }
 
+    public Double getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Double direction) {
+        this.direction = direction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Trail trail = (Trail) o;
-        return Objects.equals(latitude, trail.latitude) && Objects.equals(longitude, trail.longitude);
+        Coordinates that = (Coordinates) o;
+        return Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(direction, that.direction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(latitude, longitude);
+        return Objects.hash(latitude, longitude, direction);
     }
 }

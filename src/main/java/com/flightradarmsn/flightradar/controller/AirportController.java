@@ -1,9 +1,6 @@
 package com.flightradarmsn.flightradar.controller;
 
-import com.flightradarmsn.flightradar.mapper.ObjectMapper;
 import com.flightradarmsn.flightradar.model.dto.AirportDTO;
-import com.flightradarmsn.flightradar.model.entities.Airport;
-import com.flightradarmsn.flightradar.repository.AirportRepository;
 import com.flightradarmsn.flightradar.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

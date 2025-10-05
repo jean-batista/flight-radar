@@ -2,6 +2,7 @@ package com.flightradarmsn.flightradar.controller;
 
 
 import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
+import com.flightradarmsn.flightradar.model.dto.FlightPlanMinDTO;
 import com.flightradarmsn.flightradar.service.FlightPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,11 @@ public class FlightPlanController {
     @GetMapping
     public List<FlightPlanDTO> findAll() {
         return service.findAll();
+    }
+
+    @GetMapping("/min")
+    public List<FlightPlanMinDTO> findAllMin() {
+        return service.findAllMin();
     }
 
 }

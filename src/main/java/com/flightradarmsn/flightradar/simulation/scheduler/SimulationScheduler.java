@@ -1,6 +1,6 @@
-package com.flightradarmsn.flightradar.scheduler;
+package com.flightradarmsn.flightradar.simulation.scheduler;
 
-import com.flightradarmsn.flightradar.service.FlightSimulationService;
+import com.flightradarmsn.flightradar.simulation.service.FlightSimulationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,8 @@ public class SimulationScheduler {
     // Executa a função a cada 3 segundos
     @Scheduled(fixedRateString = "${simulation.scheduler.fixed-rate-ms}")
     public void runSimulationCycle() {
-        service.updateAllFlightPositions();
+        service.updateAllFlightsPositions();
+//        service.updateAllFlightPlans();
     }
 
 }

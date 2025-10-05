@@ -21,6 +21,7 @@ public class FlightPlanDTO implements Serializable {
     private AirlineDTO airline;
     private FlightDTO flight;
     private AircraftDTO aircraft;
+    private RouteMinDTO route;
     private LiveDTO live;
 
     public FlightPlanDTO() {
@@ -90,6 +91,14 @@ public class FlightPlanDTO implements Serializable {
         this.aircraft = aircraft;
     }
 
+    public RouteMinDTO getRoute() {
+        return route;
+    }
+
+    public void setRoute(RouteMinDTO route) {
+        this.route = route;
+    }
+
     public LiveDTO getLive() {
         return live;
     }
@@ -102,11 +111,11 @@ public class FlightPlanDTO implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         FlightPlanDTO that = (FlightPlanDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightStatus, that.flightStatus) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(live, that.live);
+        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightStatus, that.flightStatus) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(route, that.route) && Objects.equals(live, that.live);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, flightDate, flightStatus, departure, arrival, airline, flight, aircraft, live);
+        return Objects.hash(id, flightDate, flightStatus, departure, arrival, airline, flight, aircraft, route, live);
     }
 }

@@ -1,6 +1,5 @@
 package com.flightradarmsn.flightradar.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -19,20 +18,6 @@ public class Live implements Serializable {
     private Integer speedHorizontal;
     private Integer speedVertical;
     private Boolean isGround;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "tb_trail_points",
-            joinColumns = @JoinColumn(name = "flight_plan_id")
-    )
-    private List<Trail> trail;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "tb_predicted_trail_points",
-            joinColumns = @JoinColumn(name = "flight_plan_id")
-    )
-    private List<Trail> predictedTrail;
 
     public Live() {
     }
@@ -101,31 +86,15 @@ public class Live implements Serializable {
         isGround = ground;
     }
 
-    public List<Trail> getTrail() {
-        return trail;
-    }
-
-    public void setTrail(List<Trail> trail) {
-        this.trail = trail;
-    }
-
-    public List<Trail> getPredictedTrail() {
-        return predictedTrail;
-    }
-
-    public void setPredictedTrail(List<Trail> predictedTrail) {
-        this.predictedTrail = predictedTrail;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Live live = (Live) o;
-        return Objects.equals(updated, live.updated) && Objects.equals(latitude, live.latitude) && Objects.equals(longitude, live.longitude) && Objects.equals(altitude, live.altitude) && Objects.equals(direction, live.direction) && Objects.equals(speedHorizontal, live.speedHorizontal) && Objects.equals(speedVertical, live.speedVertical) && Objects.equals(isGround, live.isGround) && Objects.equals(trail, live.trail) && Objects.equals(predictedTrail, live.predictedTrail);
+        return Objects.equals(updated, live.updated) && Objects.equals(latitude, live.latitude) && Objects.equals(longitude, live.longitude) && Objects.equals(altitude, live.altitude) && Objects.equals(direction, live.direction) && Objects.equals(speedHorizontal, live.speedHorizontal) && Objects.equals(speedVertical, live.speedVertical) && Objects.equals(isGround, live.isGround);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(updated, latitude, longitude, altitude, direction, speedHorizontal, speedVertical, isGround, trail, predictedTrail);
+        return Objects.hash(updated, latitude, longitude, altitude, direction, speedHorizontal, speedVertical, isGround);
     }
 }

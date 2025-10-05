@@ -69,6 +69,10 @@ public class FlightPlan implements Serializable {
     @JoinColumn(name = "aircraft_id")
     private Aircraft aircraft;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "route_id", nullable = false)
+    private Route route;
+
     @Embedded
     @Column(length = 1024)
     @AttributeOverrides({
@@ -150,6 +154,14 @@ public class FlightPlan implements Serializable {
         this.aircraft = aircraft;
     }
 
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
     public Live getLive() {
         return live;
     }
@@ -162,11 +174,11 @@ public class FlightPlan implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         FlightPlan that = (FlightPlan) o;
-        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightStatus, that.flightStatus) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(live, that.live);
+        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightStatus, that.flightStatus) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(route, that.route) && Objects.equals(live, that.live);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, flightDate, flightStatus, departure, arrival, airline, flight, aircraft, live);
+        return Objects.hash(id, flightDate, flightStatus, departure, arrival, airline, flight, aircraft, route, live);
     }
 }
