@@ -1,10 +1,13 @@
 // CSS
 import "./App.css";
 
+// Router
+import AppRouter from "./Routes";
+
 function App() {
   return (
     <>
-      <h1>Hello World!</h1>
+      <AppRouter />
     </>
   )
 }
