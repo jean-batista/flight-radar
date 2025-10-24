@@ -1,5 +1,5 @@
 // React Router
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // Pages
 import FindFlight from "./pages/FindFlight/FindFlight";
@@ -13,15 +13,13 @@ const AppRouter = () => {
 
   return (
     <>
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/cadastro" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/planos" element={<FindFlight />} />
-                <Route path="/configs" element={<UserConfigs />} />
-            </Routes>
-      </BrowserRouter>
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cadastro" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/planos" element={<FindFlight />} />
+          <Route path="/configs" element={<UserConfigs />} />
+      </Routes>
     </>
   )
 }
