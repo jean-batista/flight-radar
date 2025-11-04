@@ -5,9 +5,8 @@ import "./Navbar.css";
 import { NavLink } from "react-router-dom";
 
 // Icons
-// import gearSvg from "../assets/gear-solid-full.svg";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
-import logoImg from "../../public/logo-image.png";
+import logoImg from "../assets/logo-image.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navbar = () => {

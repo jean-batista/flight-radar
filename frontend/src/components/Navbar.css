@@ -1,3 +1,4 @@
+/* Container principal */
 .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -7,10 +8,14 @@
     background: linear-gradient(-90deg, #4c7faf, #ffffff);
 }
 
+/* Logo */
+
 .navbar-container #logo {
     width: 70px;
     height: 70px;
 }
+
+/* Listagem dos links */
 
 .navbar-container ul {
     display: flex;
@@ -31,6 +36,8 @@
     width: 30px;
     height: 30px;
 }
+
+/* link do painel de navegacao ativo */
 
 .active {
     border-radius: 5px;

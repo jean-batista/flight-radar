@@ -1,10 +1,10 @@
 body {
     background-image: url("/src/assets/background-image.png");
-    background-size: 100% 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    position: relative;
 }
 
 .btn {
@@ -22,4 +22,13 @@ body {
 
 .btn:hover {
     opacity: 0.9;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
 }

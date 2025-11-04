@@ -1,10 +1,160 @@
 // CSS
 import "./Home.css";
+import "leaflet/dist/leaflet.css";
+
+// Open Street Map / Leaflet
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import Leaflet from "leaflet";
+import 'leaflet-rotatedmarker';
+
+// Hooks
+import { useEffect, useState } from "react";
+
+// Componentes
+import PlaneInformations from "../../components/PlaneInformations";
+
+// API
+import api from "../../services/api";
 
 const Home = () => {
+
+    // Informacoes sobre o voo e seus estados
+    const [states, setStates] = useState(null);
+
+    // Selecionar um determinado aviao
+    const [plan, setPlan] = useState(null);
+
+    // Capturar errors
+    const [error, setError] = useState(null);
+    
+    // Coordenadas do Brasil
+    const coordinates = [-15, -60];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await api.get("/api/simulation/v1/status");
+                setStates(response.data);
+                setError(null);
+            } catch(error) {
+                setError("Erro ao se conectar com o servidor.");
+            }
+        }
+
+        if(states === null) fetchData();
+        
+        const intervalId = setInterval(fetchData, 2000);
+
+        // Limpa o intervalo e evita o memory leaks
+        return () => clearInterval(intervalId);
+
+    }, []);
+
+    // Mantem as informacoes de plan atualizadas
+    useEffect(() => {
+        if(plan !== null) {
+            const fetchData = async () => {
+                try {
+                    const response = await api.get("/api/flights/v1/" + plan.id);
+                    setPlan(response.data);
+                } catch (error) {
+                    setError("Erro ao se conectar com o servidor.");
+                }
+            }
+            fetchData();
+        }
+    }, [states])
+
+    // Fazendo o icone personalizado
+    const customIcon = new Leaflet.Icon({
+        iconUrl: "src/assets/plane-up-solid-full.svg",
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -16],
+        className: "plane-icon"
+    });
+
+    const closePlanDetails = (boolean) => {
+        if(boolean) setPlan(null);
+    }
+
+    const formatCoordinatesForPolyline = (trail) => {
+        if (!trail || trail.length === 0) return [];
+        // Transforma [{lat, lon}, {lat, lon}] em [[lat, lon], [lat, lon]]
+        return trail.map(coord => [coord.latitude, coord.longitude]);
+    };
+
+    const getFlightPlan = async (id) => {
+        const response = await fetch("http://localhost:8080/api/flights/v1/" + id);
+        const json = await response.json();
+        setPlan(json);
+    }
+
   return (
-    <div>
-        <h1>Home Page</h1>
+    <div className="home-container">
+        {error && <div className="map-error">{error}</div>}
+        <MapContainer className="map-container" center={coordinates}  zoom={5} scrollWheelZoom={false} minZoom={2} maxZoom={10}>
+            {/* Define o servidor de tiles, nesse caso o Open Street Map */}
+            <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+
+            {states && states.length > 0 && states.map((state, index) => (
+                <div key={index}>
+
+                    {/* Criar um marcador */}
+                    <Marker 
+                        key={`${state.flightNumber}-${state.currentPosition.latitude}-${state.currentPosition.longitude}-${state.currentPosition.direction}`} 
+                        position={[state.currentPosition.latitude, state.currentPosition.longitude]} 
+                        icon={customIcon}
+                        rotationOrigin="center"
+                        rotationAngle={state.currentPosition.direction}
+                        eventHandlers={
+                            { 
+                                click: () => getFlightPlan(state.flightPlanId),
+                                mouseover: (e) => e.target.openPopup(),
+                                mouseout: (e) => e.target.closePopup()
+                            }
+                        }
+                    >
+                        {/* Criar o popup com as informações dos aviões */}
+                        <Popup closeButton={false}>
+                            <div className="popup-informations">
+                                {state.flightNumber}
+                            </div>
+                        </Popup>
+                    </Marker>
+
+                    {/* Trajeto  */}
+                    {plan && plan.route.waypoints.length > 0 && (
+                        <Polyline
+                            positions={formatCoordinatesForPolyline(plan.route.waypoints)}
+                            color="gray"
+                            weight={1}
+                            dashArray="5, 10"
+                            opacity={1}
+                        />
+                    )}
+
+                    {/* Trail  */}
+                    {plan && plan.route.waypoints.length > 0 && plan.id == state.flightPlanId && (
+                        <Polyline
+                            positions={formatCoordinatesForPolyline(state.trail)}
+                            color="red"
+                            weight={2}
+                            opacity={1}
+                        />
+                    )}
+
+                </div>
+
+            ))}
+        </MapContainer>
+        {/* {plan && console.log(plan)} */}
+        {plan && (
+            <PlaneInformations plan={plan} closePlanDetails={(boolean) => closePlanDetails(boolean)} />
+        )}
     </div>
   )
 }

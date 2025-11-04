@@ -1,0 +1,184 @@
+/* Container principal */
+
+.flight-plan-informations {
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 25%;
+    height: 70%;
+    position: fixed;
+    padding: 10px;
+    top: 250px;
+    left: 10px;
+    z-index: 400;
+    background-color: white;
+    overflow: scroll;
+}
+
+/* cabecalho */
+
+.flight-plan-informations header {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.flight-plan-informations header .flight-informations {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.flight-plan-informations header .flight-informations p:nth-child(1) {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.flight-plan-informations header .flight-informations p:nth-child(2) {
+    background-color: lightgray;
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+.flight-plan-informations header .flight-informations p:nth-child(3) {
+    background-color: darkcyan;
+    padding: 2px 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+/* Imagem do aviao */
+
+.flight-plan-informations .plane-image {
+    width: 100%;
+}
+
+/* Informacoes de rota */
+
+.flight-plan-informations .route-informations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flight-plan-informations .route-informations .informations {
+    border: none;
+    flex: 3;
+}
+
+.flight-plan-informations .route-informations .informations div:nth-child(1) p {
+    background-color: rgb(230, 230, 230);
+    padding: 5px;
+    border: none;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.flight-plan-informations .route-informations .informations div:nth-child(2) p {
+    background-color: lightgray;
+    margin: 5px 0;
+    padding: 5px;
+    text-align: center;
+}
+
+/* Divisao entre informcoes de rota */
+
+.flight-plan-informations .route-informations .division {
+    flex: 1;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flight-plan-informations .route-informations .division img {
+    width: 50%;
+    rotate: 90deg;
+}
+
+/* Barra de progresso */
+
+.flight-plan-informations .progress {
+    width: 95%;
+    height: 6px;
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 20px auto;
+    background-color: lightgray;
+}
+
+.flight-plan-informations .progress .bar {
+    height: 6px;
+    background-color: yellow;
+    position: relative;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.flight-plan-informations .progress .bar img {
+    width: 30px;
+    height: 30px;
+    rotate: 90deg;
+    position: absolute;
+    right: -15px;
+    top: -12.6px;
+}
+
+/* Informacoes */
+
+.flight-plan-informations .information-container {
+    margin-top: 5px;
+}
+
+.flight-plan-informations .information-container .title {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: lightblue;
+}
+
+.flight-plan-informations .information-container .title div {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flight-plan-informations .information-container .title h2 {
+    text-align: center;
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 1.5em;
+}
+
+.flight-plan-informations .information-container .informations {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.flight-plan-informations .information-container div p {
+    background-color: lightgray;
+    padding: 5px;
+}
+
+
+/* Botao de fechar */
+
+.flight-plan-informations .close-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
