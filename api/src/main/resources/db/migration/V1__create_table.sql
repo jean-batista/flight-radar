@@ -11,10 +11,13 @@ CREATE TABLE IF NOT EXISTS tb_airline (
 -- Esta também é uma entidade independente.
 CREATE TABLE IF NOT EXISTS tb_aircraft (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
     registration VARCHAR(255),
     iata VARCHAR(10),
     icao VARCHAR(10),
-    icao24 VARCHAR(20)
+    icao24 VARCHAR(20),
+    aircraft_category VARCHAR(50),
+    image_url TEXT
 );
 
 -- Tabela para armazenar os aerportos (Airports)
@@ -32,7 +35,8 @@ CREATE TABLE IF NOT EXISTS tb_airport (
     phone_number VARCHAR(50),
     country_name VARCHAR(50),
     country_iso2 VARCHAR(10),
-    city_iata_code VARCHAR(10)
+    city_iata_code VARCHAR(10),
+    city_name VARCHAR(50)
 );
 
 -- Tabela de rotas
@@ -94,6 +98,7 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     flight_iata VARCHAR(255),
     flight_icao VARCHAR(255),
     flight_codeshared BOOLEAN,
+    cruise_altitude INT,
 
     -- Campos embutidos (Embedded) de Live
     live_updated VARCHAR(255),

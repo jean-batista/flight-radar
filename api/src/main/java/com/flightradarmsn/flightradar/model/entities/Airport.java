@@ -41,6 +41,12 @@ public class Airport implements Serializable {
     @Column(name = "city_iata_code")
     private String cityIataCode;
 
+    @Column(name = "city_name")
+    private String cityName;
+
+    public Airport() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -145,15 +151,23 @@ public class Airport implements Serializable {
         this.cityIataCode = cityIataCode;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Airport airport = (Airport) o;
-        return Objects.equals(id, airport.id) && Objects.equals(airportName, airport.airportName) && Objects.equals(iataCode, airport.iataCode) && Objects.equals(icaoCode, airport.icaoCode) && Objects.equals(latitude, airport.latitude) && Objects.equals(longitude, airport.longitude) && Objects.equals(geonameId, airport.geonameId) && Objects.equals(timezone, airport.timezone) && Objects.equals(gmt, airport.gmt) && Objects.equals(phoneNumber, airport.phoneNumber) && Objects.equals(countryName, airport.countryName) && Objects.equals(countryIso2, airport.countryIso2) && Objects.equals(cityIataCode, airport.cityIataCode);
+        return Objects.equals(id, airport.id) && Objects.equals(airportName, airport.airportName) && Objects.equals(iataCode, airport.iataCode) && Objects.equals(icaoCode, airport.icaoCode) && Objects.equals(latitude, airport.latitude) && Objects.equals(longitude, airport.longitude) && Objects.equals(geonameId, airport.geonameId) && Objects.equals(timezone, airport.timezone) && Objects.equals(gmt, airport.gmt) && Objects.equals(phoneNumber, airport.phoneNumber) && Objects.equals(countryName, airport.countryName) && Objects.equals(countryIso2, airport.countryIso2) && Objects.equals(cityIataCode, airport.cityIataCode) && Objects.equals(cityName, airport.cityName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, airportName, iataCode, icaoCode, latitude, longitude, geonameId, timezone, gmt, phoneNumber, countryName, countryIso2, cityIataCode);
+        return Objects.hash(id, airportName, iataCode, icaoCode, latitude, longitude, geonameId, timezone, gmt, phoneNumber, countryName, countryIso2, cityIataCode, cityName);
     }
 }

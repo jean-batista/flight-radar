@@ -61,7 +61,8 @@ public class FlightPlan implements Serializable {
             @AttributeOverride(name = "number", column = @Column(name = "flight_number")),
             @AttributeOverride(name = "iata", column = @Column(name = "flight_iata")),
             @AttributeOverride(name = "icao", column = @Column(name = "flight_icao")),
-            @AttributeOverride(name = "codeshared", column = @Column(name = "flight_codeshared")) // <-- A linha crucial
+            @AttributeOverride(name = "codeshared", column = @Column(name = "flight_codeshared")),
+            @AttributeOverride(name = "cruiseAltitude", column = @Column(name = "cruise_altitude"))
     })
     private Flight flight;
 

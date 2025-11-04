@@ -39,6 +39,12 @@ public class AirportDTO implements Serializable {
     @JsonProperty(value = "city_iata_code")
     private String cityIataCode;
 
+    @JsonProperty(value = "city_name")
+    private String cityName;
+
+    public AirportDTO() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -143,15 +149,23 @@ public class AirportDTO implements Serializable {
         this.cityIataCode = cityIataCode;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AirportDTO that = (AirportDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(airportName, that.airportName) && Objects.equals(iataCode, that.iataCode) && Objects.equals(icaoCode, that.icaoCode) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(geonameId, that.geonameId) && Objects.equals(timezone, that.timezone) && Objects.equals(gmt, that.gmt) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(countryName, that.countryName) && Objects.equals(countryIso2, that.countryIso2) && Objects.equals(cityIataCode, that.cityIataCode);
+        return Objects.equals(id, that.id) && Objects.equals(airportName, that.airportName) && Objects.equals(iataCode, that.iataCode) && Objects.equals(icaoCode, that.icaoCode) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(geonameId, that.geonameId) && Objects.equals(timezone, that.timezone) && Objects.equals(gmt, that.gmt) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(countryName, that.countryName) && Objects.equals(countryIso2, that.countryIso2) && Objects.equals(cityIataCode, that.cityIataCode) && Objects.equals(cityName, that.cityName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, airportName, iataCode, icaoCode, latitude, longitude, geonameId, timezone, gmt, phoneNumber, countryName, countryIso2, cityIataCode);
+        return Objects.hash(id, airportName, iataCode, icaoCode, latitude, longitude, geonameId, timezone, gmt, phoneNumber, countryName, countryIso2, cityIataCode, cityName);
     }
 }

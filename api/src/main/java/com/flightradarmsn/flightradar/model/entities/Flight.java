@@ -12,6 +12,7 @@ public class Flight implements Serializable {
     private String iata;
     private String icao;
     private String codeshared;
+    private Integer cruiseAltitude;
 
     public Flight() {
     }
@@ -48,15 +49,23 @@ public class Flight implements Serializable {
         this.codeshared = codeshared;
     }
 
+    public Integer getCruiseAltitude() {
+        return cruiseAltitude;
+    }
+
+    public void setCruiseAltitude(Integer cruiseAltitude) {
+        this.cruiseAltitude = cruiseAltitude;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Flight flight = (Flight) o;
-        return Objects.equals(number, flight.number) && Objects.equals(iata, flight.iata) && Objects.equals(icao, flight.icao) && Objects.equals(codeshared, flight.codeshared);
+        return Objects.equals(number, flight.number) && Objects.equals(iata, flight.iata) && Objects.equals(icao, flight.icao) && Objects.equals(codeshared, flight.codeshared) && Objects.equals(cruiseAltitude, flight.cruiseAltitude);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, iata, icao, codeshared);
+        return Objects.hash(number, iata, icao, codeshared, cruiseAltitude);
     }
 }
