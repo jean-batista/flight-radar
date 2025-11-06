@@ -1,51 +1,148 @@
 -- Inserindo 10 planos de voo com dados realistas, status variados e IDs fixos corretos.
 
--- Voo 1: Ponte Aérea (Gol) - POUSADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
+INSERT INTO tb_flight_plan (
+    id, flight_date, flight_phase,
+    departure_timezone, departure_iata, departure_terminal, departure_gate,
+    departure_scheduled, departure_estimated, departure_actual,
+    arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage,
+    arrival_scheduled, arrival_estimated, arrival_actual,
+    flight_number, flight_iata, flight_icao, flight_codeshared, flight_cruise_altitude,
+    live_updated, live_latitude, live_longitude, live_altitude, live_direction,
+    live_speed_horizontal, live_speed_vertical, live_progress, live_is_ground,
+    airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id
+)
 VALUES
-(1, '2025-09-21', 'landed', 'America/Sao_Paulo', 'CGH', '1', '12A', '2025-09-21 10:00:00', '2025-09-21 10:05:00', '2025-09-21 10:04:00', 'America/Sao_Paulo', 'SDU', '1', '22', '3', '2025-09-21 11:00:00', '2025-09-21 11:02:00', '2025-09-21 10:59:00', '2021', 'G32021', 'GLO2021', false, 25000.0, '2025-09-21 11:00:00', -22.9105, -43.1631, 0, 0, 0, 0, true, 10, 2, 41, 44, 1);
+-- 1: Gol CGH -> SDU - AGENDADO (decola daqui a 2 min)
+(1, CURDATE(), '0', 'America/Sao_Paulo', 'CGH', '1', '12A',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    NULL,
+    'America/Sao_Paulo', 'SDU', '1', '22', '3',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 HOUR),
+    NULL,
+    '2021', 'G32021', 'GLO2021', FALSE, 25000,
+    NULL, -23.6261, -46.6558, 0, 0, 0, 0, 0, TRUE,
+    10, 2, 41, 44, 1),
 
--- Voo 2: Doméstico (Azul) GRU -> REC - ATIVO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(2, '2025-09-21', 'active', 'America/Sao_Paulo', 'GRU', '2', '208', '2025-09-21 18:00:00', '2025-09-21 18:00:00', '2025-09-21 18:02:00', 'America/Recife', 'REC', '1', 'B12', '5', '2025-09-21 21:05:00', '2025-09-21 21:05:00', NULL, '4010', 'AD4010', 'AZU4010', false, 37000.0, '2025-09-21 19:30:00', -15.664233, -39.627300, 37000.0, 45, 880, 0, false, 11, 1, 40, 55, 2);
+-- 2: Azul GRU -> REC - ATIVO (decolou há 1h)
+(2, CURDATE(), '4', 'America/Sao_Paulo', 'GRU', '2', '208',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 58 MINUTE),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR),
+    'America/Recife', 'REC', '1', 'B12', '5',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 HOUR),
+    NULL,
+    '4010', 'AD4010', 'AZU4010', FALSE, 37000,
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 30 MINUTE),
+    -15.6642, -39.6273, 37000.0, 45, 880, 0, 55, FALSE,
+    11, 1, 40, 55, 2),
 
--- Voo 3: Internacional (LATAM) GRU -> MIA - AGENDADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(3, '2025-09-21', 'scheduled', 'America/Sao_Paulo', 'GRU', '3', '315', '2025-09-21 23:05:00', '2025-09-21 23:05:00', NULL, 'America/New_York', 'MIA', 'S', 'J17', '8', '2025-09-22 06:40:00', '2025-09-22 06:40:00', NULL, '8190', 'LA8190', 'LAN8190', false, 38000.0, NULL, -23.4356, -46.4731, 0, 0, 0, 0, true, 9, 5, 40, 9, 6);
+-- 3: LATAM GRU -> MIA - AGENDADO (decola daqui a 2 min)
+(3, CURDATE(), '0', 'America/Sao_Paulo', 'GRU', '3', '315',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    NULL,
+    'America/New_York', 'MIA', 'S', 'J17', '8',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    NULL,
+    '8190', 'LA8190', 'LAN8190', FALSE, 38000,
+    NULL, -23.4356, -46.4731, 0, 0, 0, 0, 0, TRUE,
+    9, 5, 40, 9, 6),
 
--- Voo 4: Longa Distância (TAP) GIG -> LIS - ATIVO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(4, '2025-09-21', 'active', 'America/Sao_Paulo', 'GIG', '2', 'B44', '2025-09-21 17:50:00', '2025-09-21 17:50:00', '2025-09-21 17:55:00', 'Europe/Lisbon', 'LIS', '1', '42', '8', '2025-09-22 07:35:00', '2025-09-22 07:35:00', NULL, '172', 'TP172', 'TAP172', false, 39000.0, '2025-09-21 22:10:00', 0.0, -30.0, 39000.0, 35, 910, 0, false, 23, 10, 43, 25, 7);
+-- 4: TAP GIG -> LIS - ATIVO (em rota há 3h)
+(4, CURDATE(), '4', 'America/Sao_Paulo', 'GIG', '2', 'B44',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 HOUR),
+    'Europe/Lisbon', 'LIS', '1', '42', '8',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 6 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 6 HOUR),
+    NULL,
+    '172', 'TP172', 'TAP172', FALSE, 39000,
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 30 MINUTE),
+    0.0, -30.0, 39000.0, 35, 910, 0, 40, FALSE,
+    23, 10, 43, 25, 7),
 
--- Voo 5: Doméstico EUA (Delta) LAX -> JFK - POUSADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(5, '2025-09-21', 'landed', 'America/Los_Angeles', 'LAX', '2', '25A', '2025-09-21 09:00:00', '2025-09-21 09:10:00', '2025-09-21 09:08:00', 'America/New_York', 'JFK', '4', 'B25', '5', '2025-09-21 17:30:00', '2025-09-21 17:25:00', '2025-09-21 17:21:00', '417', 'DL417', 'DAL417', false, 36000.0, '2025-09-21 17:22:00', 40.6397, -73.7789, 0, 0, 0, 0, true, 2, 5, 5, 6, 10);
+-- 5: Delta LAX -> JFK - POUSADO
+(5, CURDATE(), '8', 'America/Los_Angeles', 'LAX', '2', '25A',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 9 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    'America/New_York', 'JFK', '4', 'B25', '5',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 MINUTE),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 MINUTE),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 MINUTE),
+    '417', 'DL417', 'DAL417', FALSE, 36000,
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 MINUTE),
+    40.6397, -73.7789, 0, 0, 0, 0, 100, TRUE,
+    2, 5, 5, 6, 10),
 
--- Voo 6: Intra-Europa (Lufthansa) LHR -> FRA - ATIVO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(6, '2025-09-21', 'active', 'Europe/London', 'LHR', '2', 'B32', '2025-09-21 21:30:00', '2025-09-21 21:30:00', '2025-09-21 21:33:00', 'Europe/Berlin', 'FRA', '1', 'A40', '3', '2025-09-21 23:00:00', '2025-09-21 22:55:00', NULL, '903', 'LH903', 'DLH903', false, 28000.0, '2025-09-21 22:15:00', 50.5, 4.5, 28000.0, 95, 850, 0, false, 15, 9, 14, 17, 18);
+-- 6: Lufthansa LHR -> FRA - ATIVO
+(6, CURDATE(), '4', 'Europe/London', 'LHR', '2', 'B32',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 45 MINUTE),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 44 MINUTE),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 45 MINUTE),
+    'Europe/Berlin', 'FRA', '1', 'A40', '3',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 45 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 45 MINUTE),
+    NULL,
+    '903', 'LH903', 'DLH903', FALSE, 28000,
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 MINUTE),
+    50.5, 4.5, 28000.0, 95, 850, 0, 75, FALSE,
+    15, 9, 14, 17, 18),
 
--- Voo 7: Longa Distância (Air France) GRU -> CDG - AGENDADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(7, '2025-09-22', 'scheduled', 'America/Sao_Paulo', 'GRU', '3', '301', '2025-09-22 18:55:00', '2025-09-22 18:55:00', NULL, 'Europe/Paris', 'CDG', '2E', 'M50', '22', '2025-09-23 11:10:00', '2025-09-23 11:10:00', NULL, '457', 'AF457', 'AFR457', false, 39000.0, NULL, -23.4356, -46.4731, 0, 0, 0, 0, true, 16, 8, 40, 15, 8);
+-- 7: Air France GRU -> CDG - AGENDADO
+(7, CURDATE(), '0', 'America/Sao_Paulo', 'GRU', '3', '301',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    NULL,
+    'Europe/Paris', 'CDG', '2E', 'M50', '22',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 11 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 11 HOUR),
+    NULL,
+    '457', 'AF457', 'AFR457', FALSE, 39000,
+    NULL, -23.4356, -46.4731, 0, 0, 0, 0, 0, TRUE,
+    16, 8, 40, 15, 8),
 
--- Voo 8: Longa Distância (Emirates) GIG -> DXB - AGENDADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(8, '2025-09-22', 'scheduled', 'America/Sao_Paulo', 'GIG', '2', 'C55', '2025-09-22 02:00:00', '2025-09-22 02:00:00', NULL, 'Asia/Dubai', 'DXB', '3', 'F18', '11', '2025-09-22 23:05:00', '2025-09-22 23:05:00', NULL, '248', 'EK248', 'UAE248', false, 41000.0, NULL, -22.8089, -43.2436, 0, 0, 0, 0, true, 39, 11, 43, 26, 9);
+-- 8: Emirates GIG -> DXB - AGENDADO
+(8, CURDATE(), '0', 'America/Sao_Paulo', 'GIG', '2', 'C55',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    NULL,
+    'Asia/Dubai', 'DXB', '3', 'F18', '11',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 10 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 10 HOUR),
+    NULL,
+    '248', 'EK248', 'UAE248', FALSE, 41000,
+    NULL, -22.8089, -43.2436, 0, 0, 0, 0, 0, TRUE,
+    39, 11, 43, 26, 9),
 
--- Voo 9: Ásia-Europa (Singapore Airlines) SIN -> LHR - POUSADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(9, '2025-09-20', 'landed', 'Asia/Singapore', 'SIN', '2', 'B5', '2025-09-20 23:30:00', '2025-09-20 23:35:00', '2025-09-20 23:38:00', 'Europe/London', 'LHR', '2', 'C58', '19', '2025-09-21 06:00:00', '2025-09-21 05:55:00', '2025-09-21 05:52:00', '321', 'SQ321', 'SIA321', false, 40000.0, '2025-09-21 05:53:00', 51.4706, -0.4619, 0, 0, 0, 0, true, 28, 13, 32, 14, 12);
+-- 9: Singapore SIN -> LHR - POUSADO
+(9, CURDATE(), '8', 'Asia/Singapore', 'SIN', '2', 'B5',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 15 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 14 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 14 HOUR),
+    'Europe/London', 'LHR', '2', 'C58', '19',
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    '321', 'SQ321', 'SIA321', FALSE, 40000,
+    DATE_SUB(UTC_TIMESTAMP(), INTERVAL 8 HOUR),
+    51.4706, -0.4619, 0, 0, 0, 0, 100, TRUE,
+    28, 13, 32, 14, 12),
 
--- Voo 10: Doméstico (LATAM) BSB -> MAO - AGENDADO
-INSERT INTO tb_flight_plan (id, flight_date, flight_status, departure_timezone, departure_iata, departure_terminal, departure_gate, departure_scheduled, departure_estimated, departure_actual, arrival_timezone, arrival_iata, arrival_terminal, arrival_gate, arrival_baggage, arrival_scheduled, arrival_estimated, arrival_actual, flight_number, flight_iata, flight_icao, flight_codeshared, cruise_altitude, live_updated, live_latitude, live_longitude, live_altitude, live_direction, live_speed_horizontal, live_speed_vertical, live_is_ground, airline_id, aircraft_id, departure_airport_id, arrival_airport_id, route_id)
-VALUES
-(10, '2025-09-22', 'scheduled', 'America/Sao_Paulo', 'BSB', '1', '22', '2025-09-22 06:00:00', '2025-09-22 06:00:00', NULL, 'America/Manaus', 'MAO', '1', '3', '4', '2025-09-22 07:55:00', '2025-09-22 07:55:00', NULL, '3578', 'LA3578', 'LAN3578', false, 35000.0, NULL, -15.8692, -47.9172, 0, 0, 0, 0, true, 9, 3, 50, 64, 31);
+-- 10: LATAM BSB -> MAO - AGENDADO
+(10, CURDATE(), '0', 'America/Sao_Paulo', 'BSB', '1', '22',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 MINUTE),
+    NULL,
+    'America/Manaus', 'MAO', '1', '3', '4',
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 HOUR),
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 HOUR),
+    NULL,
+    '3578', 'LA3578', 'LAN3578', FALSE, 35000,
+    NULL, -15.8692, -47.9172, 0, 0, 0, 0, 0, TRUE,
+    9, 3, 50, 64, 31);

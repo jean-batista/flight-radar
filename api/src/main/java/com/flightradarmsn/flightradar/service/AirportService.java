@@ -1,7 +1,6 @@
 package com.flightradarmsn.flightradar.service;
 
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
-import com.flightradarmsn.flightradar.model.dto.AirlineDTO;
 import com.flightradarmsn.flightradar.model.dto.AirportDTO;
 import com.flightradarmsn.flightradar.model.entities.Airport;
 import com.flightradarmsn.flightradar.repository.AirportRepository;

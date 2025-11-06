@@ -1,11 +1,8 @@
 package com.flightradarmsn.flightradar.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 

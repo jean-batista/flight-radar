@@ -1,7 +1,9 @@
 package com.flightradarmsn.flightradar.simulation.state;
 
 import com.flightradarmsn.flightradar.model.dto.CoordinatesDTO;
+import com.flightradarmsn.flightradar.model.enums.FlightPhase;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,17 +16,26 @@ public class FlightState {
     // Numero do voo
     private Integer flightNumber;
 
+    // Altitude de cruzeiro
+    private Integer cruiseAltitude;
+
     // Altitude
-    private Integer altitude; // TODO
+    private Integer currentAltitude;
+
+    // Horario de decolagem
+    private OffsetDateTime scheduled;
+
+    // Fase de voo
+    private FlightPhase phase;
 
     // Direção
-    private Integer direction; // TODO
+    private Integer direction;
 
     // Horizontal speed
     private Integer speedHorizontal;
 
     // Vertical Speed
-    private Integer speedVertical; // TODO
+    private Integer speedVertical;
 
     // Lista de waypoints
     private List<CoordinatesDTO> waypoints;
@@ -32,40 +43,44 @@ public class FlightState {
     // Waypoint atual
     private CoordinatesDTO currentPosition;
 
-    // Waypoints já percorridos
+    // Waypoints ja percorridos
     private List<CoordinatesDTO> trail = new ArrayList<>();
 
-    // Índice do próximo waypoint
+    // Indice do proximo waypoint
     private int nextWaypointIndex;
 
     // Progresso
     private Integer progress;
 
-    public FlightState() {
-    }
-
+    // Construtor
     public FlightState(
             Long flightPlanId,
             Integer flightNumber,
-            Integer altitude,
+            Integer cruiseAltitude,
+            Integer currentAltitude,
+            OffsetDateTime scheduled,
+            FlightPhase phase,
             Integer direction,
             Integer speedHorizontal,
             Integer speedVertical,
             List<CoordinatesDTO> waypoints) {
         this.flightPlanId = flightPlanId;
         this.flightNumber = flightNumber;
-        this.altitude = altitude;
+        this.cruiseAltitude = cruiseAltitude;
+        this.currentAltitude = currentAltitude;
+        this.scheduled = scheduled;
+        this.phase = phase;
         this.direction = direction;
         this.speedHorizontal = speedHorizontal;
         this.speedVertical = speedVertical;
         this.waypoints = waypoints;
-        // A simulação começa no primeiro ponto da rota
+        // A simulacao comeca no primeiro ponto da rota
         this.currentPosition = waypoints.getFirst();
         for(int i = 0; i <= waypoints.indexOf(currentPosition); i++) {
             this.trail.add(waypoints.get(i));
         }
 
-        // O alvo inicial é o segundo ponto (índice 1)
+        // O alvo inicial e o segundo ponto (indice 1)
         this.nextWaypointIndex = 1;
         this.progress = (nextWaypointIndex * 100) / waypoints.size();
     }
@@ -86,12 +101,36 @@ public class FlightState {
         this.flightNumber = flightNumber;
     }
 
-    public Integer getAltitude() {
-        return altitude;
+    public Integer getCruiseAltitude() {
+        return cruiseAltitude;
     }
 
-    public void setAltitude(Integer altitude) {
-        this.altitude = altitude;
+    public void setCruiseAltitude(Integer cruiseAltitude) {
+        this.cruiseAltitude = cruiseAltitude;
+    }
+
+    public Integer getCurrentAltitude() {
+        return currentAltitude;
+    }
+
+    public void setCurrentAltitude(Integer currentAltitude) {
+        this.currentAltitude = currentAltitude;
+    }
+
+    public OffsetDateTime getScheduled() {
+        return scheduled;
+    }
+
+    public void setScheduled(OffsetDateTime scheduled) {
+        this.scheduled = scheduled;
+    }
+
+    public FlightPhase getPhase() {
+        return phase;
+    }
+
+    public void setPhase(FlightPhase phase) {
+        this.phase = phase;
     }
 
     public Integer getDirection() {
@@ -158,7 +197,7 @@ public class FlightState {
         this.progress = progress;
     }
 
-    // Verifica se o voo já completou a rota
+    // Verifica se o voo ja completou a rota
     public boolean hasFinished() {
         return nextWaypointIndex >= waypoints.size();
     }
@@ -167,11 +206,11 @@ public class FlightState {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         FlightState that = (FlightState) o;
-        return nextWaypointIndex == that.nextWaypointIndex && Objects.equals(flightPlanId, that.flightPlanId) && Objects.equals(flightNumber, that.flightNumber) && Objects.equals(altitude, that.altitude) && Objects.equals(direction, that.direction) && Objects.equals(speedHorizontal, that.speedHorizontal) && Objects.equals(speedVertical, that.speedVertical) && Objects.equals(waypoints, that.waypoints) && Objects.equals(currentPosition, that.currentPosition) && Objects.equals(trail, that.trail) && Objects.equals(progress, that.progress);
+        return nextWaypointIndex == that.nextWaypointIndex && Objects.equals(flightPlanId, that.flightPlanId) && Objects.equals(flightNumber, that.flightNumber) && Objects.equals(cruiseAltitude, that.cruiseAltitude) && Objects.equals(currentAltitude, that.currentAltitude) && Objects.equals(scheduled, that.scheduled) && phase == that.phase && Objects.equals(direction, that.direction) && Objects.equals(speedHorizontal, that.speedHorizontal) && Objects.equals(speedVertical, that.speedVertical) && Objects.equals(waypoints, that.waypoints) && Objects.equals(currentPosition, that.currentPosition) && Objects.equals(trail, that.trail) && Objects.equals(progress, that.progress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flightPlanId, flightNumber, altitude, direction, speedHorizontal, speedVertical, waypoints, currentPosition, trail, nextWaypointIndex, progress);
+        return Objects.hash(flightPlanId, flightNumber, cruiseAltitude, currentAltitude, scheduled, phase, direction, speedHorizontal, speedVertical, waypoints, currentPosition, trail, nextWaypointIndex, progress);
     }
 }

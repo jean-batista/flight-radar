@@ -1,5 +1,6 @@
 package com.flightradarmsn.flightradar.model.entities;
 
+import com.flightradarmsn.flightradar.model.enums.FlightPhase;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ public class FlightPlan implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate flightDate;
-    private String flightStatus;
+    private FlightPhase flightPhase;
 
     @Embedded
     @Column(length = 1024)
@@ -62,7 +63,7 @@ public class FlightPlan implements Serializable {
             @AttributeOverride(name = "iata", column = @Column(name = "flight_iata")),
             @AttributeOverride(name = "icao", column = @Column(name = "flight_icao")),
             @AttributeOverride(name = "codeshared", column = @Column(name = "flight_codeshared")),
-            @AttributeOverride(name = "cruiseAltitude", column = @Column(name = "cruise_altitude"))
+            @AttributeOverride(name = "cruiseAltitude", column = @Column(name = "flight_cruise_altitude"))
     })
     private Flight flight;
 
@@ -80,11 +81,12 @@ public class FlightPlan implements Serializable {
             @AttributeOverride(name = "updated", column = @Column(name = "live_updated")),
             @AttributeOverride(name = "latitude", column = @Column(name = "live_latitude")),
             @AttributeOverride(name = "longitude", column = @Column(name = "live_longitude")),
-            @AttributeOverride(name = "altitude", column = @Column(name = "live_altitude")), // <-- A linha crucial
-            @AttributeOverride(name = "direction", column = @Column(name = "live_direction")), // <-- A linha crucial
-            @AttributeOverride(name = "speedHorizontal", column = @Column(name = "live_speed_horizontal")), // <-- A linha crucial
-            @AttributeOverride(name = "speedVertical", column = @Column(name = "live_speed_vertical")), // <-- A linha crucial
-            @AttributeOverride(name = "isGround", column = @Column(name = "live_is_ground")) // <-- A linha crucial
+            @AttributeOverride(name = "altitude", column = @Column(name = "live_altitude")),
+            @AttributeOverride(name = "direction", column = @Column(name = "live_direction")),
+            @AttributeOverride(name = "speedHorizontal", column = @Column(name = "live_speed_horizontal")),
+            @AttributeOverride(name = "speedVertical", column = @Column(name = "live_speed_vertical")),
+            @AttributeOverride(name = "progress", column = @Column(name = "live_progress")),
+            @AttributeOverride(name = "isGround", column = @Column(name = "live_is_ground"))
     })
     private Live live;
 
@@ -107,12 +109,12 @@ public class FlightPlan implements Serializable {
         this.flightDate = flightDate;
     }
 
-    public String getFlightStatus() {
-        return flightStatus;
+    public FlightPhase getFlightPhase() {
+        return flightPhase;
     }
 
-    public void setFlightStatus(String flightStatus) {
-        this.flightStatus = flightStatus;
+    public void setFlightPhase(FlightPhase flightPhase) {
+        this.flightPhase = flightPhase;
     }
 
     public Departure getDeparture() {
@@ -175,11 +177,11 @@ public class FlightPlan implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         FlightPlan that = (FlightPlan) o;
-        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightStatus, that.flightStatus) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(route, that.route) && Objects.equals(live, that.live);
+        return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightPhase, that.flightPhase) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(route, that.route) && Objects.equals(live, that.live);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, flightDate, flightStatus, departure, arrival, airline, flight, aircraft, route, live);
+        return Objects.hash(id, flightDate, flightPhase, departure, arrival, airline, flight, aircraft, route, live);
     }
 }

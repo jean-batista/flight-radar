@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 public class LiveDTO implements Serializable {
@@ -20,6 +19,8 @@ public class LiveDTO implements Serializable {
 
     @JsonProperty(value = "speed_vertical")
     private Integer speedVertical;
+
+    private Integer progress;
 
     @JsonProperty(value = "is_ground")
     private Boolean isGround;
@@ -83,6 +84,14 @@ public class LiveDTO implements Serializable {
         this.speedVertical = speedVertical;
     }
 
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
+
     public Boolean getGround() {
         return isGround;
     }
@@ -95,11 +104,11 @@ public class LiveDTO implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         LiveDTO liveDTO = (LiveDTO) o;
-        return Objects.equals(updated, liveDTO.updated) && Objects.equals(latitude, liveDTO.latitude) && Objects.equals(longitude, liveDTO.longitude) && Objects.equals(altitude, liveDTO.altitude) && Objects.equals(direction, liveDTO.direction) && Objects.equals(speedHorizontal, liveDTO.speedHorizontal) && Objects.equals(speedVertical, liveDTO.speedVertical) && Objects.equals(isGround, liveDTO.isGround);
+        return Objects.equals(updated, liveDTO.updated) && Objects.equals(latitude, liveDTO.latitude) && Objects.equals(longitude, liveDTO.longitude) && Objects.equals(altitude, liveDTO.altitude) && Objects.equals(direction, liveDTO.direction) && Objects.equals(speedHorizontal, liveDTO.speedHorizontal) && Objects.equals(speedVertical, liveDTO.speedVertical) && Objects.equals(progress, liveDTO.progress) && Objects.equals(isGround, liveDTO.isGround);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(updated, latitude, longitude, altitude, direction, speedHorizontal, speedVertical, isGround);
+        return Objects.hash(updated, latitude, longitude, altitude, direction, speedHorizontal, speedVertical, progress, isGround);
     }
 }

@@ -12,11 +12,13 @@ public class SimulationScheduler {
     @Autowired
     private FlightSimulationService service;
 
-    // Executa a função a cada 3 segundos
+    /*
+    * A funcao e executada de acordo com a propriedade definida
+    * em aplication.properties
+    * */
     @Scheduled(fixedRateString = "${simulation.scheduler.fixed-rate-ms}")
     public void runSimulationCycle() {
         service.updateAllFlightsPositions();
-//        service.updateAllFlightPlans();
     }
 
 }

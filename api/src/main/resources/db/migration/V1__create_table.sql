@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     -- Campos próprios da entidade FlightPlan
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     flight_date DATE,
-    flight_status VARCHAR(255),
+    flight_phase TINYINT,
 
     -- Campos embutidos (Embedded) de Departure com prefixo
     departure_timezone VARCHAR(255),
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     flight_iata VARCHAR(255),
     flight_icao VARCHAR(255),
     flight_codeshared BOOLEAN,
-    cruise_altitude INT,
+    flight_cruise_altitude INT,
 
     -- Campos embutidos (Embedded) de Live
     live_updated VARCHAR(255),
@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS tb_flight_plan (
     live_direction DOUBLE,
     live_speed_horizontal DOUBLE,
     live_speed_vertical DOUBLE,
+    live_progress INT,
     live_is_ground BOOLEAN,
 
     -- Chaves Estrangeiras para as entidades relacionadas
