@@ -1,37 +1,15 @@
 // CSS
 import "./PlaneInformations.css";
 
-// Hooks
-import { useEffect, useState } from "react";
-
 // dayjs
 import dayjs from "dayjs";
 
-// API
-import api from "../services/api";
-
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlaneDeparture, faPlaneUp, faX } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const FlightPlanInformations = ({plan, closePlanDetails}) => {
-
-  const [state, setState] = useState(null);
-
-  useEffect(() => {
-    if(plan != null) {
-        const fetchData = async () => {
-            try {
-              const response = await api.get(`/api/simulation/v1/status/${plan.id}`);
-              setState(response.data);
-            } catch(error) {
-              console.log(error);
-            }
-        }
-        fetchData();
-    }
-  }, [plan])
 
 
   return (
@@ -83,7 +61,7 @@ const FlightPlanInformations = ({plan, closePlanDetails}) => {
 
       {/* Barra de progresso */}
       <div className="progress">
-          <div className="bar" style={{width: `${state && state.progress}%`}}>
+          <div className="bar" style={{width: `${plan && plan.live.progress}%`}}>
             <img src="src/assets/plane-up-solid-full.svg" alt="plane icon" />
           </div>
       </div>
@@ -92,7 +70,7 @@ const FlightPlanInformations = ({plan, closePlanDetails}) => {
       <div className="information-container">
         <div className="title">
           <div>
-            <img src="src/assets/plane-up-solid-full.svg" alt="plane icon" />
+            <FontAwesomeIcon icon={faPlaneUp} />
           </div>
           <h2>Informações da Aeronave</h2>
         </div>
@@ -101,6 +79,21 @@ const FlightPlanInformations = ({plan, closePlanDetails}) => {
           <p>{plan.aircraft.name}</p>
           <p>Registration: {plan.aircraft.registration}</p>
           <p>Aircraft Category: {plan.aircraft.aircraft_category}</p>
+        </div>
+      </div>
+
+      {/* Informacoes do voo */}
+      <div className="information-container">
+        <div className="title">
+          <div>
+            <FontAwesomeIcon icon={faPlaneDeparture} />
+          </div>
+          <h2>Informações do Voo</h2>
+        </div>
+        <div className="informations">
+          <p>Velocidade horizontal: {plan.live.speed_horizontal} kts</p>
+          <p>Velocidade vertical: {plan.live.speed_vertical} ft/s</p>
+          <p>Altitude: {plan.live.altitude} ft</p>
         </div>
       </div>
       
@@ -113,12 +106,9 @@ const FlightPlanInformations = ({plan, closePlanDetails}) => {
           <h2>Informações de Posição</h2>
         </div>
         <div className="informations">
-          {/* <p>Última atualização: {new Date(Date.parse(plan.live.updated)).toLocaleString()}</p> */}
           <p>Última atualização: {dayjs(plan.live.updated).format('DD/MM/YYYY - HH:mm:ss')}</p>
-          <p>Última latitude: {plan.live.latitude}</p>
-          <p>Última longitude: {plan.live.longitude}</p>
-          <p>Velocidade horizontal: {plan.live.speed_horizontal}</p>
-          <p>Velocidade vertical: {plan.live.speed_vertical}</p>
+          <p>Última latitude: {plan.live.latitude.toFixed(2)}</p>
+          <p>Última longitude: {plan.live.longitude.toFixed(2)}</p>
         </div>
       </div>
       <button className="close-button" onClick={() => closePlanDetails(true)}>
