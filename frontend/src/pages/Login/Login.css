@@ -1,0 +1,103 @@
+/* Container principal */
+
+.login-container {
+    width: 600px; 
+    background: rgba(255,255,255,.85);
+    padding: 24px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1.5em;
+    border-radius: 10px;
+}
+
+.login-container h1 {
+    margin:0 0 8px;
+    font-size: 1.75rem;
+    color: #0e1c32;
+    font-weight: 800;
+    text-align: center;
+    margin: 20px;
+}
+
+.login-container .hint {
+    margin: 0 0 12px; color: #334155;
+    text-align: center;
+    margin: 20px;
+}
+
+/* Form */
+
+.login-container form {
+    padding: 5px;
+}
+
+.login-container form .field {
+    margin: 30px 0;
+}
+
+.login-container form .field label {
+    display:block;
+    margin:0 0 6px;
+    color:#1f2a44;
+    font-weight: 600;
+}
+      
+.login-container form .field input {
+    font-size: 1em;
+    font-weight: 600;
+    width:100%;
+    border:none;
+    border-bottom: 2px solid #1f2a44;
+    background: transparent;
+    padding: 10px 2px;
+    color:#0f172a;
+    outline:none;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+
+/* actions div */
+
+.login-container form .actions {
+    margin-top: 10px;
+    display:flex;align-items: center;
+    justify-content: space-between;
+}
+
+.login-container form .actions a {
+    color: #0e1c32;
+    text-decoration: none;
+}
+
+.login-container form .actions a:hover {
+    text-decoration:underline
+}
+
+.login-container form .actions span, a {
+    margin: 15px;
+}
+
+/* button */
+
+.login-container input[type="submit"] {
+    margin: 10px;
+}
+
+@media (max-width: 540px) {
+    .login-container {
+        width: 80%;
+        height: auto;
+        margin: 50px auto;
+        padding: 20px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-height: 900px) {
+    .login-container {
+        margin: 80px auto;
+        height: auto;
+    }
+}

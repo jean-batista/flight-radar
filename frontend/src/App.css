@@ -1,5 +1,6 @@
 body {
     background-image: url("/src/assets/background-image.png");
+    font-family: 'Roboto', sans-serif;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -22,6 +23,18 @@ body {
 
 .btn:hover {
     opacity: 0.9;
+}
+
+.form-error {
+    width: 100%;
+    padding: 5px;
+    margin: 5px;
+    color: #dc2626;
+    margin-top: 4px;
+    display: block;
+    text-align: center;
+    font-size: 0.75em;
+    border: 1px solid #dc2626;
 }
 
 html, body, #root {
