@@ -4,22 +4,23 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class PersonDTO implements Serializable {
+/*
+ * Utilizado para carregar as informacoes do usuario
+ * para realizar o cadastro
+ *
+ * Name - Nome do usuario
+ * Birth Date - Data de nascimento
+ * Email - Email do usuario (utilizado como Username no Spring Security)
+ * Password - Senha do usuario
+ * */
 
-    private Long id;
+public class RegisterDTO implements Serializable {
     private String name;
     private LocalDate birthDate;
     private String email;
+    private String password;
 
-    public PersonDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public RegisterDTO() {
     }
 
     public String getName() {
@@ -46,15 +47,23 @@ public class PersonDTO implements Serializable {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        PersonDTO personDTO = (PersonDTO) o;
-        return Objects.equals(id, personDTO.id) && Objects.equals(name, personDTO.name) && Objects.equals(birthDate, personDTO.birthDate) && Objects.equals(email, personDTO.email);
+        RegisterDTO that = (RegisterDTO) o;
+        return Objects.equals(name, that.name) && Objects.equals(birthDate, that.birthDate) && Objects.equals(email, that.email) && Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, birthDate, email);
+        return Objects.hash(name, birthDate, email, password);
     }
 }
