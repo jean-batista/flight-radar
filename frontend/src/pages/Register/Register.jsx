@@ -1,9 +1,12 @@
 // CSS
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Register.css";
 
 // Hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+// API
+import api from "../../services/api";
 
 const Register = () => {
 
@@ -12,45 +15,52 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+  
+    if(username !== null && token !== null) {
+      navigate("/");
+    }
+  }, []);
+
+  /*
+    {
+      "name": "Usuario2",
+      "birthDate": "2004-06-23",
+      "email": "usuario2@email.com",
+      "password": "admin"
+    }
+  */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(fullName === "") {
-      setError("Preencha o campo de nome!");
+    if(password !== confirmPassword) {
+      // setError("As senhas precisam ser iguais!");
+      setInfo({ type: "ERROR", message: "As senhas precisam ser iguais!" });
       return;
     }
 
-    if(birth === "") {
-      setError("Preencha o campo de data de nascimento!");
-      return;
+    const data = {
+      name: fullName,
+      birthDate: birth,
+      email,
+      password,
     }
 
-    if(email === "") {
-      setError("Preencha o campo de data de email!");
-      return;
+    try {
+      const response = await api.post("/auth/register", data);
+      setInfo({ type: "SUCCESS", message: "Usuario cadastrado com sucesso!" });
+      setTimeout(() => { navigate("/login") }, 3000);
+    } catch(error) {
+      setInfo({ type: "ERROR", message: "Algo deu errado, tente novamente mais tarde!" });
     }
-
-    if(password === "") {
-      setError("Preencha o campo de data de senha!");
-      return;
-    }
-
-    if(confirmPassword === "") {
-      setError("Preencha o campo de data de confirmar a senha!");
-      return;
-    }
-
-    if(password != confirmPassword) {
-      setError("As senhas não coincidem!");
-      return;
-    }
-
-    setError(null);
-
-    window.alert("Cadastro realizado com sucesso!");
   }
 
   return (
@@ -60,25 +70,26 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="name">Nome completo</label>
-          <input type="text" name="name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+          <input type="text" name="name" required value={fullName} onChange={(e) => setFullName(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="birth">Data de nascimento</label>
-          <input type="date" name="birth" value={birth} onChange={(e) => setBirth(e.target.value)} />
+          <input type="date" name="birth" required value={birth} onChange={(e) => setBirth(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="email" name="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="password">Senha</label>
-          <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="password" name="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="confirm-password">Confirmar senha</label>
-          <input type="password" name="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <input type="password" name="confirm-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         </div>
-        {error && <p className="form-error">{error}</p>}
+        {info && info.type === "SUCCESS" && <p className="form-success">{info.message}</p>}
+        {info && info.type === "ERROR" && <p className="form-error">{info.message}</p>}
         <input type="submit" className="btn" value="Cadastrar" />
         <span>Já tem conta? <NavLink to="/login">Faça Login</NavLink></span>
       </form>
