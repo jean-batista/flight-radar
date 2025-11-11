@@ -2,41 +2,53 @@
 import "./Login.css";
 
 // Hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+// API
+import api from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("useEffect")
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+
+    if(username !== null && token !== null) {
+      navigate("/");
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(email === "") {
-      setError("Preencha o campo de email!");
-      return;
+    const data = {
+      username: email,
+      password
     }
 
+    let response = null;
 
-    if(password === "") {
-      setError("A senha não pode estar vazia!");
-      return;
+    try {
+      response = await api.post("/auth/signin", data);
+
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("token", response.data.token);
+
+    } catch(error) {
+      setError(error.message);
     }
 
-    if(email !== "test@test.com") {
-      setError("Email incorreto!");
-      return;
-    }
+    navigate("/");
 
-    if(password !== "admin") {
-      setError("Senha incorreta!");
-      return;
-    }
-
-    setError(null);
-
-    window.alert("Login realizado com sucesso!");
   }
 
   return (
