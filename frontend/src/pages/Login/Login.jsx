@@ -4,19 +4,21 @@ import "./Login.css";
 // Hooks
 import { useEffect, useState } from "react";
 
-// API
-import api from "../../services/api";
+// Hooks
 import { useNavigate } from "react-router-dom";
+
+// Backend
+import backend from "../../services/backend";
 
 const Login = () => {
 
-  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+  // Verifica se existe um usuário logado
   useEffect(() => {
     console.log("useEffect")
     const username = localStorage.getItem("username");
@@ -35,11 +37,8 @@ const Login = () => {
       password
     }
 
-    let response = null;
-
     try {
-      response = await api.post("/auth/signin", data);
-
+      const response = await backend.post("/auth/signin", data);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("token", response.data.token);
 

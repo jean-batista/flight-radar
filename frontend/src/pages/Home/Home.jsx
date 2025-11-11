@@ -74,20 +74,26 @@ const Home = () => {
         className: "plane-icon"
     });
 
-    const closePlanDetails = (boolean) => {
+    // Funcao para fechar a tela de detalhes do aviao
+    const closePlaneDetails = (boolean) => {
         if(boolean) setPlan(null);
     }
 
+    // Formata a latitude e longitude para o formato do OpenStreetMap
     const formatCoordinatesForPolyline = (trail) => {
         if (!trail || trail.length === 0) return [];
         // Transforma [{lat, lon}, {lat, lon}] em [[lat, lon], [lat, lon]]
         return trail.map(coord => [coord.latitude, coord.longitude]);
     };
 
+    // Busca um plano de voo de acordo com um id
     const getFlightPlan = async (id) => {
-        const response = await fetch("http://localhost:8080/api/flights/v1/" + id);
-        const json = await response.json();
-        setPlan(json);
+        try {
+            const response = await api.get(`/api/flights/v1/${id}`);
+            setPlan(response.data);
+        } catch(error) {
+            setError("Erro ao se conectar com o servidor.");
+        }
     }
 
   return (
@@ -118,7 +124,7 @@ const Home = () => {
                             }
                         }
                     >
-                        {/* Criar o popup com as informações dos aviões */}
+                        {/* Criar o popup com as informações dos avioes */}
                         <Popup closeButton={false}>
                             <div className="popup-informations">
                                 {state.flightNumber}
@@ -151,9 +157,8 @@ const Home = () => {
 
             ))}
         </MapContainer>
-        {/* {plan && console.log(plan)} */}
         {plan && (
-            <PlaneInformations plan={plan} closePlanDetails={(boolean) => closePlanDetails(boolean)} />
+            <PlaneInformations plan={plan} closePlanDetails={(boolean) => closePlaneDetails(boolean)} />
         )}
     </div>
   )

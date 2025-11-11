@@ -16,6 +16,7 @@ const Navbar = () => {
 
   const [user, setUser] = useState(null);
 
+  // Verifica se existe um usuário logado
   useEffect(() => {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");

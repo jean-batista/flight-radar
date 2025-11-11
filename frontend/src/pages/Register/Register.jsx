@@ -1,12 +1,14 @@
 // CSS
-import { NavLink, useNavigate } from "react-router-dom";
 import "./Register.css";
 
 // Hooks
 import { useEffect, useState } from "react";
 
-// API
-import api from "../../services/api";
+// React Router
+import { NavLink, useNavigate } from "react-router-dom";
+
+// Backend
+import backend from "../../services/backend";
 
 const Register = () => {
 
@@ -15,11 +17,11 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
   const [info, setInfo] = useState(null);
 
   const navigate = useNavigate();
 
+  // Verifica se existe um usuário logado
   useEffect(() => {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
@@ -29,20 +31,10 @@ const Register = () => {
     }
   }, []);
 
-  /*
-    {
-      "name": "Usuario2",
-      "birthDate": "2004-06-23",
-      "email": "usuario2@email.com",
-      "password": "admin"
-    }
-  */
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if(password !== confirmPassword) {
-      // setError("As senhas precisam ser iguais!");
       setInfo({ type: "ERROR", message: "As senhas precisam ser iguais!" });
       return;
     }
@@ -55,7 +47,7 @@ const Register = () => {
     }
 
     try {
-      const response = await api.post("/auth/register", data);
+      await backend.post("/auth/register", data);
       setInfo({ type: "SUCCESS", message: "Usuario cadastrado com sucesso!" });
       setTimeout(() => { navigate("/login") }, 3000);
     } catch(error) {
