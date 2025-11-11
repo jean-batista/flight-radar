@@ -1,0 +1,55 @@
+/* Container principal */
+
+.user-configs-container {
+    width: 600px;
+    background: rgba(255,255,255,.85);
+    padding: 12px 24px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1.25em;
+    border-radius: 10px;
+}
+
+.user-configs-container h1 {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.user-configs-container .hint {
+    margin: 10px 0;
+}
+
+/* Formulario */
+
+.user-configs-container form {
+    padding: 5px;
+}
+
+.user-configs-container form .box input {
+    display: block;
+    margin: 10px auto;
+    width: 100%;
+    padding: 0 5px;
+    height: 44px;
+    font-size: 1em;
+    font-weight: 600;
+    border: 2px solid #1f2a44;
+    border-radius: 5px;
+    background-color: #cdd6ff;
+    color: #0f172a;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.user-configs-container .box,
+.user-configs-container .actions {
+    margin: 20px auto;
+    padding: 0 2px;
+}
+
+/* Actions */
+
+.user-configs-container form .actions input {
+    margin: 10px 0;
+}
