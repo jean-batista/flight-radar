@@ -70,10 +70,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 authorize -> authorize
                 // Endpoints publicos
-                .requestMatchers("/auth/signin", "/auth/refresh/**", "auth/register").permitAll()
+                .requestMatchers("/auth/signin", "auth/register").permitAll()
                 // Endpois com acesso de administrador
                 .requestMatchers("/api/person/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/refresh/**", "auth/user").authenticated()
             )
             .cors(cors -> {})
             .build();

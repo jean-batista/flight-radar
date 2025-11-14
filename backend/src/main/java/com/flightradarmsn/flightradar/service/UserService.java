@@ -1,12 +1,6 @@
 package com.flightradarmsn.flightradar.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
-import com.flightradarmsn.flightradar.model.dto.AccountCredentials;
 import com.flightradarmsn.flightradar.model.dto.PersonDTO;
 import com.flightradarmsn.flightradar.model.dto.RegisterDTO;
 import com.flightradarmsn.flightradar.model.dto.UserDTO;
@@ -14,6 +8,7 @@ import com.flightradarmsn.flightradar.model.entities.Person;
 import com.flightradarmsn.flightradar.model.entities.User;
 import com.flightradarmsn.flightradar.model.enums.Roles;
 import com.flightradarmsn.flightradar.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +17,11 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -56,16 +56,9 @@ public class UserService implements UserDetailsService {
         return list;
     }
 
-    public UserDTO update(UserDTO user) {
-
-        if(user == null) throw new RuntimeException();
-        if(user.getUsername() == null || user.getUsername().isBlank()) throw new RuntimeException();
-        if(user.getRoles() == null || user.getRoles().isEmpty()) throw new RuntimeException();
-
-        User entity = repository.findByUsername(user.getUsername());
-        entity.setUsername(user.getUsername());
-        entity.setRoles(user.getRoles());
-
+    public UserDTO update(UserDTO userDTO) {
+        User entity = repository.findById(userDTO.getId()).orElseThrow();
+        update(entity, userDTO);
         return ObjectMapper.parseObject(repository.save(entity), UserDTO.class);
     }
 
@@ -79,6 +72,14 @@ public class UserService implements UserDetailsService {
         User user = repository.findByUsername(username);
         if(user == null) throw new UsernameNotFoundException("User " + username + " not found!");
         return user;
+    }
+
+    private void update(User entity, UserDTO userDTO) {
+        if(userDTO == null) throw new RuntimeException("Usuário nulo");
+        if(StringUtils.isNotBlank(userDTO.getUsername())) entity.setUsername(userDTO.getUsername());
+        if(StringUtils.isNotBlank(userDTO.getPassword())) entity.setPassword(userDTO.getPassword());
+        if(userDTO.getRoles() != null) entity.setRoles(userDTO.getRoles());
+        if(userDTO.getPerson() != null) entity.setPerson(ObjectMapper.parseObject(userDTO.getPerson(), Person.class));
     }
 
     private String generateHashedPassword(String password) {
