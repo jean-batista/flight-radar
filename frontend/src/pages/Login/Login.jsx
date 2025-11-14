@@ -5,7 +5,7 @@ import "./Login.css";
 import { useEffect, useState } from "react";
 
 // Hooks
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 // Backend
 import backend from "../../services/backend";
@@ -20,7 +20,6 @@ const Login = () => {
 
   // Verifica se existe um usuário logado
   useEffect(() => {
-    console.log("useEffect")
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
 
@@ -41,12 +40,10 @@ const Login = () => {
       const response = await backend.post("/auth/signin", data);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("token", response.data.token);
-
+      navigate("/");
     } catch(error) {
       setError(error.message);
     }
-
-    navigate("/");
 
   }
 
@@ -65,7 +62,8 @@ const Login = () => {
         </div>
         {error && <p className="form-error">{error}</p>}
         <div className="actions">
-            <span>Não tem uma conta?<a href="#">Registre-se</a></span>
+            {/* <span>Não tem uma conta?<a href="#">Registre-se</a></span> */}
+            <span>Não tem uma conta? <NavLink to="/cadastro">Registre-se</NavLink></span>
         </div>
         <input type="submit" value="Login" className="btn" />
       </form>

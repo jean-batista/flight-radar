@@ -2,10 +2,10 @@
 import "./Navbar.css";
 
 // React Router
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 // Icons
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import logoImg from "../assets/logo-image.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 const Navbar = () => {
 
   const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
 
   // Verifica se existe um usuário logado
   useEffect(() => {
@@ -26,12 +28,21 @@ const Navbar = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setUser(null);
+    navigate("/login");
+  }
+
   return (
     <nav className="navbar-container">
         <NavLink to="/" className={({ isActive }) => ("")}>
         <img id="logo" src={logoImg} alt="logo" />
         </NavLink>
         <ul>
+            <li>
+              <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink>
+            </li>
             {!user && (
               <li>
                 <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login</NavLink>
@@ -48,8 +59,13 @@ const Navbar = () => {
             {user && (
               <li>
                 <NavLink to="/configs" className={({ isActive }) => (isActive ? "active" : "")}>
-                  <FontAwesomeIcon icon={faGear} />
+                  <FontAwesomeIcon icon={faUser} />
                 </NavLink>
+              </li>
+            )}
+            {user && (
+              <li>
+                <button className="logout-btn" onClick={handleLogout}>Sair</button>
               </li>
             )}
         </ul>

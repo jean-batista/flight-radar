@@ -19,6 +19,8 @@
 
 .navbar-container ul {
     display: flex;
+    justify-content: space-around;
+    align-items: center;
     margin: 0 10px;
     list-style: none;
 }
@@ -35,6 +37,15 @@
 .navbar-container ul li #navbar-gear {
     width: 30px;
     height: 30px;
+}
+
+.navbar-container ul li .logout-btn {
+    padding: 14px 28px;
+    color: #fff;
+    background: #0f274a;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
 }
 
 /* link do painel de navegacao ativo */

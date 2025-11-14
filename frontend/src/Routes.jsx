@@ -6,7 +6,7 @@ import FindFlight from "./pages/FindFlight/FindFlight";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
-import UserConfigs from "./pages/UserConfigs/UserConfigs";
+import Profile from "./pages/Profile/Profile";
 
 
 const AppRouter = () => {
@@ -18,7 +18,7 @@ const AppRouter = () => {
           <Route path="/cadastro" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/planos" element={<FindFlight />} />
-          <Route path="/configs" element={<UserConfigs />} />
+          <Route path="/configs" element={<Profile />} />
       </Routes>
     </>
   )
