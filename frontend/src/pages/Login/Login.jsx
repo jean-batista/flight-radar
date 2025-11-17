@@ -4,7 +4,7 @@ import "./Login.css";
 // Hooks
 import { useEffect, useState } from "react";
 
-// Hooks
+// React Router
 import { NavLink, useNavigate } from "react-router-dom";
 
 // Backend
@@ -40,6 +40,7 @@ const Login = () => {
       const response = await backend.post("/auth/signin", data);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("roles", response.data.roles);
       navigate("/");
     } catch(error) {
       setError(error.message);

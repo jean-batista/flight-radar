@@ -1,0 +1,57 @@
+/* Container principal */
+
+.delete-user-container {
+    width: 500px;
+    background: #ffffff;
+    padding: 24px;
+    font-size: 1.25em;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.delete-user-container .hint {
+    font-size: 0.8em;
+    color: #ff0000;
+    width: bold;
+    margin: 10px 0px;
+}
+
+.delete-user-container button {
+    float: right;
+    padding: 5px;
+    border: none;
+    background: transparent;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.delete-user-container h2 {
+    margin:0 0 8px;
+    color: #0e1c32;
+    font-weight: 800;
+    text-align: center;
+    margin: 20px;
+}
+
+/* Form */
+
+.delete-user-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    font-size: 0.7em;
+}
+
+.delete-user-container form input[type="text"],
+.delete-user-container form input[type="password"] {
+    font-size: 1em;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #cdd6ff;
+    border: none;
+    outline: none;
+}

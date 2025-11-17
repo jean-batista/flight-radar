@@ -41,7 +41,7 @@ const Profile = () => {
 
     const fetchData = async () => {
       try {
-        const response = await backend.get("/auth/user", headers);
+        const response = await backend.get("/api/users/v1", headers);
         setName(response.data.name);
         setBirthDate(response.data.birthDate);
         setEmail(response.data.email);
@@ -78,7 +78,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await backend.put("/auth/user", data, headers);
+      const response = await backend.put("/api/users/v1", data, headers);
       localStorage.setItem("token", response.data.token);
       setCurrentPassword("");
       setNewPassword("");

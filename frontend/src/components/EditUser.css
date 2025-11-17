@@ -1,0 +1,50 @@
+/* Container principal */
+
+.edit-user-container {
+    width: 500px;
+    background: #ffffff;
+    padding: 24px;
+    font-size: 1.25em;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.edit-user-container button {
+    float: right;
+    padding: 5px;
+    border: none;
+    background: transparent;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.edit-user-container h2 {
+    margin:0 0 8px;
+    color: #0e1c32;
+    font-weight: 800;
+    text-align: center;
+    margin: 20px;
+}
+
+/* Form */
+
+.edit-user-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    font-size: 0.7em;
+}
+
+.edit-user-container form input[type="text"],
+.edit-user-container form input[type="email"] {
+    font-size: 1em;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #cdd6ff;
+    border: none;
+    outline: none;
+}

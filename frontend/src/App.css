@@ -8,22 +8,7 @@ body {
     position: relative;
 }
 
-.btn {
-    appearance:none;
-    border: 0;
-    cursor: pointer;font-weight: 800;
-    width: 100%;
-    padding: 12px;
-    border-radius: 999px;
-    font-size: 1.25rem;
-    color: #fff;
-    background: #0f274a;
-    box-shadow: 0 10px 20px rgba(15,39,74,.35), inset 0 -3px 0 rgba(0,0,0,.15);
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
+/* Informacoes */
 
 .form-error {
     width: 100%;
@@ -48,6 +33,46 @@ body {
     font-size: 0.75em;
     border: 1px solid #109010;
 }
+
+/* Estilo dos botoes */
+
+
+
+.btn {
+    appearance:none;
+    border: 0;
+    cursor: pointer;
+    font-weight: 800;
+    width: 100%;
+    padding: 12px;
+    border-radius: 999px;
+    font-size: 1.25rem;
+    color: #fff;
+    background: #0f274a;
+    box-shadow: 0 10px 20px rgba(15,39,74,.35), inset 0 -3px 0 rgba(0,0,0,.15);
+}
+
+.delete-button {
+    font-weight: 800;
+    background-color: #dc2626;
+}
+
+.edit-button {
+    font-weight: 800;
+    background-color: #109010;
+}
+
+.btn:hover,
+.delete-button:hover,
+.edit-button:hover {
+    opacity: 0.9;
+}
+
+.disabled {
+    opacity: 50%;
+}
+
+/* Formatacao */
 
 html, body, #root {
   height: 100%;

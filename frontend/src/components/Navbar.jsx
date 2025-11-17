@@ -22,10 +22,12 @@ const Navbar = () => {
   useEffect(() => {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
+    const roles = localStorage.getItem("roles");
   
-    if(username !== null && token !== null) {
-      setUser({ username, token });
+    if(username !== null && token !== null && roles !== null) {
+      setUser({ username, token, roles: [...roles.split(",")] });
     }
+
   }, []);
 
   const handleLogout = () => {
@@ -54,15 +56,25 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <NavLink to="/planos" className={({ isActive }) => (isActive ? "active" : "")}>Buscar plano de voo</NavLink>
+              <NavLink to="/buscar" className={({ isActive }) => (isActive ? "active" : "")}>Buscar plano de voo</NavLink>
             </li>
             {user && (
               <li>
-                <NavLink to="/configs" className={({ isActive }) => (isActive ? "active" : "")}>
+                <NavLink to="/perfil" className={({ isActive }) => (isActive ? "active" : "")}>
                   <FontAwesomeIcon icon={faUser} />
                 </NavLink>
               </li>
             )}
+            {/* Deve possuir role como admin */}
+            {
+              user && user.roles.includes("ADMIN") && (
+                <li>
+                  <NavLink to="/admin/usuarios" className={({ isActive }) => (isActive ? "active" : "")}>
+                    <FontAwesomeIcon icon={faGear} />
+                  </NavLink>
+                </li>
+              )
+            }
             {user && (
               <li>
                 <button className="logout-btn" onClick={handleLogout}>Sair</button>
