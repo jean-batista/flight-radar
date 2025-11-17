@@ -66,7 +66,7 @@ public class JwtTokenProvider {
         .withIssuer(issueUrl)
         .sign(algorithm);
 
-        return new TokenDTO(username, token);
+        return new TokenDTO(username, token, roles);
     }
 
     /*

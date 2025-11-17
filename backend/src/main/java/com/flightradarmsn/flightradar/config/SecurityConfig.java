@@ -72,8 +72,9 @@ public class SecurityConfig {
                 // Endpoints publicos
                 .requestMatchers("/auth/signin", "auth/register").permitAll()
                 // Endpois com acesso de administrador
-                .requestMatchers("/api/person/**").hasRole("ADMIN")
-                .requestMatchers("/auth/refresh/**", "auth/user").authenticated()
+                .requestMatchers("/api/person/**", "/api/admin/v1").hasRole("ADMIN")
+                // Endpoints que exigem autenticacao
+                .requestMatchers("/auth/refresh/**", "/api/users/v1").authenticated()
             )
             .cors(cors -> {})
             .build();

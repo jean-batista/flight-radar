@@ -43,14 +43,4 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    @GetMapping("/user")
-    public ProfileDTO getUserProfile() {
-        return service.getUserProfile();
-    }
-
-    @PutMapping("/user")
-    public TokenDTO updateUserProfile(@RequestBody ProfileDTO dto) {
-        return service.updateUserProfile(dto);
-    }
-
 }
