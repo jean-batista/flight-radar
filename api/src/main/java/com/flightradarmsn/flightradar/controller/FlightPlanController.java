@@ -3,13 +3,12 @@ package com.flightradarmsn.flightradar.controller;
 
 import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
 import com.flightradarmsn.flightradar.model.dto.FlightPlanMinDTO;
+import com.flightradarmsn.flightradar.model.dto.SearchFlightDTO;
 import com.flightradarmsn.flightradar.service.FlightPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.flightradarmsn.flightradar.mapper.ObjectMapper.parseListObjects;
 
 @RestController
 @RequestMapping("/api/flights/v1")
@@ -36,6 +35,11 @@ public class FlightPlanController {
     @GetMapping("/min")
     public List<FlightPlanMinDTO> findAllMin() {
         return service.findAllMin();
+    }
+
+    @GetMapping("/search")
+    public List<FlightPlanDTO> searchFlights(@ModelAttribute SearchFlightDTO criteria) {
+        return service.searchFlights(criteria);
     }
 
 }
