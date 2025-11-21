@@ -103,3 +103,11 @@
     padding: 10px;
     text-align: center;
 }
+
+/* Erro */
+
+.find-flight-container .error {
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 1.5em;
+}
