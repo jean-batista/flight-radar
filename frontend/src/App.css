@@ -36,8 +36,6 @@ body {
 
 /* Estilo dos botoes */
 
-
-
 .btn {
     appearance:none;
     border: 0;
@@ -70,6 +68,11 @@ body {
 
 .disabled {
     opacity: 50%;
+}
+
+input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 /* Formatacao */

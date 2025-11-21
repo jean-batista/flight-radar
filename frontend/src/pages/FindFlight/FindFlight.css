@@ -1,0 +1,105 @@
+/* Container Principal */
+.find-flight-container {
+    margin: 50px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Serach Container */
+
+.find-flight-container form {
+    width: 100%;
+    margin: 10px 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 100px;
+}
+
+.find-flight-container form .search-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 15px;
+    font-size: 1.2em;
+}
+
+.find-flight-container form .search-container div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: #406990;
+}
+
+.find-flight-container form .search-container label {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.find-flight-container form .search-container input {
+    background-color: transparent;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid #ffffff;
+    outline: none;
+    color: #ffffff;
+    font-size: 1em;
+}
+
+.find-flight-container form .search-container input[type="number"]::-webkit-inner-spin-button,
+.find-flight-container form .search-container input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Form Sumit */
+
+.find-flight-container form button {
+    padding: 20px 30px;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #c2d3e4;
+    box-shadow: 0 10px 20px rgba(15,39,74,.35);
+    cursor: pointer;
+}
+
+.find-flight-container form button:hover {
+    background-color: #d5e1ec;
+}
+
+/* Tabela */
+
+.find-flight-container table {
+    width: 100%;
+    color: #ffffff;
+}
+
+.find-flight-container table thead tr th {
+    font-size: 1.3em;
+    background-color: #406990;
+    color: #ffffff;
+}
+
+.find-flight-container table tbody tr td {
+    background-color: #cdd6ff;
+    font-size: 1.1em;
+}
+
+.find-flight-container table, th, td {
+    border: 2px solid black;
+	border-collapse: collapse;
+    padding: 10px;
+    text-align: center;
+}
