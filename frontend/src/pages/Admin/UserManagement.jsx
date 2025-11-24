@@ -14,43 +14,41 @@ import { useNavigate } from "react-router-dom";
 // Backend
 import backend from "../../services/backend";
 
+// Context
+import { useAuthValue } from "../../context/AuthContext";
+
 const UserManagement = () => {
 
-    const [user, setUser] = useState(null);
-    const [users, setUsers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [systemUsers, setSystemUsers] = useState([]);
     const [action, setAction] = useState(null);
 
+    const { user: admin, loading } = useAuthValue();
     const navigate = useNavigate();
 
     // Verifica se existe um usuário logado e se seu acesso é permitido
     useEffect(() => {
-        const username = localStorage.getItem("username");
-        const token = localStorage.getItem("token");
-        const roles = localStorage.getItem("roles");
-
-        if(username === null && token === null && roles === null && roles.length === 0) {
+        if(!admin && !loading) navigate("/");
+        if(admin !== null && !admin.roles.includes("ADMIN")) {
+            window.alert("Acesso não autorizado!");
             navigate("/");
         }
+    }, [admin, loading]);
 
-        if(!roles.includes("ADMIN")) {
-            window.alert("Rota não autorizada!");
-            navigate("/");
-        }
-    }, []);
-
+    // Carrega os usuarios
     useEffect(() => {
         const fetchData = async() => {
             const response = await backend.get("/api/admin/v1", { headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             } });
-            setUsers(response.data);
+            setSystemUsers(response.data);
         }
         fetchData();
-    }, []);
+    }, [admin, loading]);
 
     const getUserById = (id) => {
-        const user = users.find((user) => user.id === id);
-        setUser(user);
+        const selectedUser = systemUsers.find((selectedUser) => selectedUser.id === id);
+        setSelectedUser(selectedUser);
     }
 
     const editPersonById = (id) => {
@@ -67,10 +65,13 @@ const UserManagement = () => {
         const response = await backend.get("/api/admin/v1", { headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         } });
-        setUsers(response.data);
+        setSystemUsers(response.data);
         setAction(null);
-        setUser(null);
+        setSelectedUser(null);
     }
+
+    // Estado de Carregamento
+    if(loading) return <div>Carregando...</div>;
 
     return (
         <main className="user-management-container">
@@ -85,24 +86,24 @@ const UserManagement = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users && users.length > 0 && users.map((user) => (
-                        <tr key={user.person.id}>
-                            <td>{user.person.name}</td>
-                            <td>{user.person.email}</td>
+                    {systemUsers && systemUsers.length > 0 && systemUsers.map((selectedUser) => (
+                        <tr key={selectedUser.person.id}>
+                            <td>{selectedUser.person.name}</td>
+                            <td>{selectedUser.person.email}</td>
                             <td>
-                                {user.roles.includes("ADMIN") ? "Administrador" : "Usuário Comum"}
+                                {selectedUser.roles.includes("ADMIN") ? "Administrador" : "Usuário Comum"}
                             </td>
                             <td>
-                                {localStorage.getItem("username") === user.username && (
+                                {admin && admin.username === selectedUser.username && (
                                     <>
                                         <button className="edit-button disabled"  disabled>Editar</button>
                                         <button className="delete-button disabled" disabled>Excluir</button>
                                     </>
                                 )}
-                                {localStorage.getItem("username") !== user.username && (
+                                {admin && admin.username !== selectedUser.username && (
                                     <>
-                                        <button className="edit-button" onClick={() => editPersonById(user.person.id)}>Editar</button>
-                                        <button className="delete-button" onClick={() => deleteUserById(user.person.id)}>Excluir</button>
+                                        <button className="edit-button" onClick={() => editPersonById(selectedUser.person.id)}>Editar</button>
+                                        <button className="delete-button" onClick={() => deleteUserById(selectedUser.person.id)}>Excluir</button>
                                     </>
                                 )}
                             </td>
@@ -110,11 +111,11 @@ const UserManagement = () => {
                     ))}
                 </tbody>
             </table>
-            {user && action === "EDIT" && (
-                <EditUser user={user} close={closeScreen} />
+            {selectedUser && action === "EDIT" && (
+                <EditUser user={selectedUser} close={closeScreen} />
             )}
-            {user && action === "DELETE" && (
-                <DeleteUser user={user} close={closeScreen} />
+            {selectedUser && action === "DELETE" && (
+                <DeleteUser user={selectedUser} close={closeScreen} />
             )}
         </main>
     );

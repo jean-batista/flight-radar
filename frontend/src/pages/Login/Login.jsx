@@ -10,43 +10,44 @@ import { NavLink, useNavigate } from "react-router-dom";
 // Backend
 import backend from "../../services/backend";
 
+// Context
+import { useAuthValue } from "../../context/AuthContext";
+
 const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
+  const { user, setUser, loading } = useAuthValue();
   const navigate = useNavigate();
 
   // Verifica se existe um usuário logado
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-
-    if(username !== null && token !== null) {
+    if(user && !loading) {
       navigate("/");
     }
-  }, []);
+  }, [user, loading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      username: email,
-      password
-    }
-
     try {
-      const response = await backend.post("/auth/signin", data);
-      localStorage.setItem("username", response.data.username);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("roles", response.data.roles);
+      const response = await backend.post("/auth/signin", { username: email, password });
+      setUser({
+        username: response.data.username,
+        token: response.data.token,
+        roles: response.data.roles
+      });
       navigate("/");
     } catch(error) {
       setError(error.message);
     }
 
   }
+
+  // Estado de Carregamento
+  if(loading) return <div>Carregando...</div>;
 
   return (
     <main className="login-container">

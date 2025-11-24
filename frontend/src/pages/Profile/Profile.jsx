@@ -10,6 +10,9 @@ import backend from "../../services/backend";
 // Backend
 import { useNavigate } from "react-router-dom";
 
+// Context
+import { useAuthValue } from "../../context/AuthContext";
+
 const Profile = () => {
 
   const [name, setName] = useState("");
@@ -21,27 +24,23 @@ const Profile = () => {
 
   const [info, setInfo] = useState(null);
 
+  const { user, loading } = useAuthValue();
   const navigate = useNavigate();
 
-  // Verifica se existe um usuário logado
+  // Verifica se existe um usuario logado
+  useEffect(() => {
+    if(!user && !loading) navigate("/login");
+  }, [user]);
+
+  // Carrega os dados do usuario
   useEffect(() => {
 
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-
-    if(username === null || token === null) {
-      navigate("/login");
-    }
-
-    const headers = { 
-      headers: { 
-        Authorization: `Bearer ${token}`
-      }
-    }
-
     const fetchData = async () => {
+      if(user === null) return;
       try {
-        const response = await backend.get("/api/users/v1", headers);
+        const response = await backend.get("/api/users/v1", { headers: {
+          Authorization: `Bearer ${user.token}`
+        } });
         setName(response.data.name);
         setBirthDate(response.data.birthDate);
         setEmail(response.data.email);
@@ -51,7 +50,7 @@ const Profile = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [user]);
 
   // Envia a requisicao de atualizacao de dados
   const handleSubmit = async(e) => {
@@ -63,12 +62,6 @@ const Profile = () => {
       return;
     }
 
-    const headers = { 
-      headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    }
-
     const data = {
       name,
       birthDate,
@@ -78,7 +71,9 @@ const Profile = () => {
     }
 
     try {
-      const response = await backend.put("/api/users/v1", data, headers);
+      const response = await backend.put("/api/users/v1", data, { headers: {
+        Authorization: `Bearer ${user.token}`
+      } });
       localStorage.setItem("token", response.data.token);
       setCurrentPassword("");
       setNewPassword("");
@@ -91,6 +86,9 @@ const Profile = () => {
     }
     
   }
+
+  // Estado de Carregamento
+  if(loading) return <div>Carregando...</div>;
 
   return (
     <main className="user-configs-container">

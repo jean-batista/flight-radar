@@ -10,26 +10,25 @@ import { NavLink, useNavigate } from "react-router-dom";
 // Backend
 import backend from "../../services/backend";
 
+// Context
+import { useAuthValue } from "../../context/AuthContext";
+
 const Register = () => {
 
-  const [fullName, setFullName] = useState("");
-  const [birth, setBirth] = useState("");
+  const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [info, setInfo] = useState(null);
 
+  const { user, loading } = useAuthValue();
   const navigate = useNavigate();
 
   // Verifica se existe um usuário logado
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-  
-    if(username !== null && token !== null) {
-      navigate("/");
-    }
-  }, []);
+    if(user && !loading) navigate("/");
+  }, [user, loading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,21 +38,17 @@ const Register = () => {
       return;
     }
 
-    const data = {
-      name: fullName,
-      birthDate: birth,
-      email,
-      password,
-    }
-
     try {
-      await backend.post("/auth/register", data);
+      await backend.post("/auth/register", { name, birthDate, email, password });
       setInfo({ type: "SUCCESS", message: "Usuario cadastrado com sucesso!" });
-      setTimeout(() => { navigate("/login") }, 3000);
+      setTimeout(() => { navigate("/login") }, 2000);
     } catch(error) {
       setInfo({ type: "ERROR", message: "Algo deu errado, tente novamente mais tarde!" });
     }
   }
+
+  // Estado de Carregamento
+  if(loading) return <div>Carregando...</div>;
 
   return (
     <main className="register-container">
@@ -62,11 +57,11 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="name">Nome completo</label>
-          <input type="text" name="name" required value={fullName} onChange={(e) => setFullName(e.target.value)} />
+          <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="field">
-          <label htmlFor="birth">Data de nascimento</label>
-          <input type="date" name="birth" required value={birth} onChange={(e) => setBirth(e.target.value)} />
+          <label htmlFor="birthDate">Data de nascimento</label>
+          <input type="date" name="birthDate" required value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="email">Email</label>

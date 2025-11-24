@@ -2,38 +2,23 @@
 import "./Navbar.css";
 
 // React Router
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 // Icons
 import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
-import logoImg from "../assets/logo-image.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import logoImg from "../assets/logo-image.png";
 
-// Hooks
-import { useEffect, useState } from "react";
+// Context
+import { useAuthValue } from "../context/AuthContext";
 
 const Navbar = () => {
 
-  const [user, setUser] = useState(null);
-
-  const navigate = useNavigate();
-
-  // Verifica se existe um usuário logado
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-    const roles = localStorage.getItem("roles");
-  
-    if(username !== null && token !== null && roles !== null) {
-      setUser({ username, token, roles: [...roles.split(",")] });
-    }
-
-  }, []);
+  const { user, setUser } = useAuthValue();
 
   const handleLogout = () => {
     localStorage.clear();
     setUser(null);
-    navigate("/login");
   }
 
   return (
