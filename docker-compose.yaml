@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # --- BANCO DE DADOS DA API (SIMULAÇÃO) ---
+  api_database:
+    image: mysql:9.1.0
+    restart: always
+    container_name: flight_radar_api_db
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: flight_radar_api
+      MYSQL_USER: docker 
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3308:3306" # Porta 3308
+    expose:
+      - 3306
+    networks:
+      - flight-radar-network
+
+  # --- BANCO DE DADOS DO BACKEND (AUTH) ---
+  backend_database:
+    image: mysql:9.1.0
+    restart: always
+    container_name: flight_radar_auth_db
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: flight_radar_backend
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3309:3306" # CORREÇÃO: Alterado para 3309 para não conflitar com a API
+    expose:
+      - 3306
+    networks:
+      - flight-radar-network
+
+  # --- API DE SIMULAÇÃO ---
+  flight_radar_api:
+    image: jeanbatista03/flight_radar_api
+    restart: on-failure
+    build: ./api
+    working_dir: /flightradarapi
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_DATASOURCE_URL: jdbc:mysql://api_database:3306/flight_radar_api?allowPublicKeyRetrieval=true&useSSL=false&useTimezone=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin
+    command: mvn spring-boot:run
+    ports:
+      - "8090:8090"
+    depends_on:
+      - api_database
+    networks:
+      - flight-radar-network
+    volumes:
+      - ./api:/flightradarapi
+      - ~/.m2:/root/.m2
+
+  # --- BACKEND DE AUTENTICAÇÃO ---
+  flight_radar_backend:
+    image: jeanbatista03/flight_radar_backend
+    restart: on-failure
+    build: ./backend
+    working_dir: /flightradarbackend
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_DATASOURCE_URL: jdbc:mysql://backend_database:3306/flight_radar_backend?allowPublicKeyRetrieval=true&useSSL=false&useTimezone=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin
+      # CORREÇÃO: Adicionado a variável que faltava
+      # Nota: O Spring converte automaticamente SECRET_KEY ou SECRET-KEY para a propriedade 'secret-key'
+      SECRET_KEY: my-secret-key 
+    command: mvn spring-boot:run
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend_database
+    networks:
+      - flight-radar-network
+    volumes:
+      - ./backend:/flightradarbackend
+      - ~/.m2:/root/.m2
+
+  # --- FRONTEND (REACT) ---
+  flight_radar_frontend:
+    image: jeanbatista03/flight_radar_frontend
+    restart: always
+    build: ./frontend
+    working_dir: /app
+    command: npm run dev -- --host 
+    ports:
+      - "5173:5173"
+    networks:
+      - flight-radar-network
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  # --- PORTAINER ---
+  portainer:
+    image: portainer/portainer-ce:latest
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - flight-radar-network
+
+volumes:
+  portainer_data:
+  # Se quiser persistir os dados do MySQL 9.1, adicione volumes aqui também no futuro
+
+networks:
+  flight-radar-network:
+    driver: bridge
