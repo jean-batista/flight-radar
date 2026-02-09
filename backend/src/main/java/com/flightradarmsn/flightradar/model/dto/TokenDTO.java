@@ -1,5 +1,7 @@
 package com.flightradarmsn.flightradar.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -12,9 +14,14 @@ import java.util.Objects;
 * */
 
 public class TokenDTO implements Serializable {
-    
+
+    @NotBlank(message = "O usuário é obrigatório")
     private String username;
+
+    @NotBlank(message = "O token é obrigatório")
     private String token;
+
+    @NotBlank(message = "A lista de roles não pode estar vazia")
     private List<String> roles;
 
     public TokenDTO() {

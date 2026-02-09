@@ -1,5 +1,8 @@
 package com.flightradarmsn.flightradar.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 
 /*
@@ -11,8 +14,12 @@ import java.io.Serializable;
 * */
 
 public class AccountCredentials implements Serializable {
-    
+
+    @NotBlank(message = "O nome de usuário é obrigatório")
     private String username;
+
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 4, message = "A senha deve possuir pelo menos 8 caracteres")
     private String password;
     
     public AccountCredentials() {

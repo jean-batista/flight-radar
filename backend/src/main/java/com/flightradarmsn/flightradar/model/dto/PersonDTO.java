@@ -1,5 +1,11 @@
 package com.flightradarmsn.flightradar.model.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -7,8 +13,16 @@ import java.util.Objects;
 public class PersonDTO implements Serializable {
 
     private Long id;
+
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
+
+    @NotNull(message = "A data de nascimento é obrigatória")
+    @Past(message = "A data de nascimento deve ser no passado")
     private LocalDate birthDate;
+
+    @NotBlank(message = "O email é obrigatório")
+    @Email
     private String email;
 
     public PersonDTO() {

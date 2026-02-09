@@ -3,7 +3,9 @@ package com.flightradarmsn.flightradar.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.flightradarmsn.flightradar.exceptions.TokenException;
 import com.flightradarmsn.flightradar.model.dto.TokenDTO;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,13 +103,15 @@ public class JwtTokenProvider {
     * Metodo responsavel por validar o token
     * */
     public boolean validateToken(String token) {
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
         try {
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
             if(decodedJWT.getExpiresAt().before(new Date())) return false;
             return true;
+        } catch(TokenExpiredException e) {
+            throw new TokenException("Token expirado em " + e.getExpiredOn());
         } catch(Exception e) {
-            throw new RuntimeException("Expired or Invalid JWT Token");
+            throw new TokenException("Token inválido");
         }
     }
 

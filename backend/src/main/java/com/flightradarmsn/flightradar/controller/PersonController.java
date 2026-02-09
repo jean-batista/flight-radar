@@ -2,6 +2,7 @@ package com.flightradarmsn.flightradar.controller;
 
 import com.flightradarmsn.flightradar.model.dto.PersonDTO;
 import com.flightradarmsn.flightradar.service.PersonService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +16,12 @@ public class PersonController {
     private PersonService service;
 
     @PostMapping
-    public PersonDTO save(@RequestBody PersonDTO person) {
+    public PersonDTO save(@RequestBody @Valid PersonDTO person) {
         return service.save(person);
     }
 
     @GetMapping("/{id}")
-    public PersonDTO findById(@PathVariable Long id) {
+    public PersonDTO findById(@PathVariable @Valid Long id) {
         return service.findById(id);
     }
 
@@ -30,12 +31,12 @@ public class PersonController {
     }
 
     @PutMapping
-    public PersonDTO update(@RequestBody PersonDTO person) {
+    public PersonDTO update(@RequestBody @Valid PersonDTO person) {
         return service.update(person);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Valid Long id) {
         service.delete(id);
     }
 

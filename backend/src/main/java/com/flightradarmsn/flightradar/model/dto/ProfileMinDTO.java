@@ -1,11 +1,22 @@
 package com.flightradarmsn.flightradar.model.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ProfileMinDTO {
+public class ProfileMinDTO implements Serializable {
 
+    @NotNull(message = "O id é obrigatório")
     private Long userId;
+
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
+
+    @NotBlank(message = "O email é obrigatório")
+    @Email
     private String email;
 
     public ProfileMinDTO() {

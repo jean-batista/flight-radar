@@ -1,10 +1,9 @@
 package com.flightradarmsn.flightradar.controller;
 
 import com.flightradarmsn.flightradar.model.dto.AccountCredentials;
-import com.flightradarmsn.flightradar.model.dto.ProfileDTO;
 import com.flightradarmsn.flightradar.model.dto.RegisterDTO;
-import com.flightradarmsn.flightradar.model.dto.TokenDTO;
 import com.flightradarmsn.flightradar.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +17,12 @@ public class AuthController {
     private AuthService service;
 
     @PostMapping("/register")
-    public void register(@RequestBody RegisterDTO data) {
+    public void register(@RequestBody @Valid RegisterDTO data) {
         service.register(data);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody AccountCredentials credentials) {
+    public ResponseEntity<?> signIn(@RequestBody @Valid AccountCredentials credentials) {
         if(credentials == null || credentials.getPassword().isBlank() || credentials.getUsername().isBlank()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Request");
         }
@@ -34,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh/{username}")
-    public ResponseEntity<?> refreshToken(@PathVariable("username") String username, @RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<?> refreshToken(@PathVariable("username") @Valid String username, @RequestHeader("Authorization") @Valid String refreshToken) {
         if(username == null || refreshToken == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Request");
         }

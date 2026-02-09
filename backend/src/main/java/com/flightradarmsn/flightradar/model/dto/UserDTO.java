@@ -2,20 +2,30 @@ package com.flightradarmsn.flightradar.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightradarmsn.flightradar.model.enums.Roles;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 public class UserDTO implements Serializable {
-    
+
+
     private Long id;
+
+    @NotBlank(message = "O usuário é obrigatório")
     private String username;
+
+    @NotBlank(message = "A lista de roles não pode estar vazia")
     private List<Roles> roles;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 4, message = "A senha deve possuir pelo menos 8 caracteres")
     private String password;
 
+    @NotBlank(message = "Person é obrigatório")
     private PersonDTO person;
     
     public UserDTO() {

@@ -1,5 +1,6 @@
 package com.flightradarmsn.flightradar.config;
 
+import com.flightradarmsn.flightradar.security.JwtAuthenticationEntryPoint;
 import com.flightradarmsn.flightradar.security.JwtTokenFilter;
 import com.flightradarmsn.flightradar.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class SecurityConfig {
     
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     /*
     * Configura e cria o sistema de codificacao de senhas (password encoding) para o seu Spring Security,
@@ -67,6 +71,9 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception ->
+                    exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            )
             .authorizeHttpRequests(
                 authorize -> authorize
                 // Endpoints publicos
@@ -75,6 +82,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/person/**", "/api/admin/v1").hasRole("ADMIN")
                 // Endpoints que exigem autenticacao
                 .requestMatchers("/auth/refresh/**", "/api/users/v1").authenticated()
+                // Apenas usuarios autenticados podem ver mensagens de erros
+                .requestMatchers("/error").permitAll()
+                .anyRequest().authenticated()
             )
             .cors(cors -> {})
             .build();

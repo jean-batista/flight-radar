@@ -1,5 +1,6 @@
 package com.flightradarmsn.flightradar.service;
 
+import com.flightradarmsn.flightradar.exceptions.UserException;
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
 import com.flightradarmsn.flightradar.model.dto.PersonDTO;
 import com.flightradarmsn.flightradar.model.dto.RegisterDTO;
@@ -39,12 +40,16 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO findById(Long id) {
-        User entity = repository.findById(id).orElseThrow();
+        User entity = repository.findById(id).orElseThrow(
+                () -> new UserException("Não foi possível encontrar o usuário com o id: " + id)
+        );
         return ObjectMapper.parseObject(entity, UserDTO.class);
     }
 
     public UserDTO findByUsername(String username) {
-        User entity = repository.findByUsername(username);
+        User entity = repository.findByUsername(username).orElseThrow(
+                () -> new UserException("Não foi possivel encontrar o usuário: " + username)
+        );
         return ObjectMapper.parseObject(entity, UserDTO.class);
     }
 
@@ -57,25 +62,28 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO update(UserDTO userDTO) {
-        User entity = repository.findById(userDTO.getId()).orElseThrow();
+        User entity = repository.findById(userDTO.getId()).orElseThrow(
+                () -> new UserException("Não foi possivel encontrar o usuário com o id: " + userDTO.getId())
+        );
         update(entity, userDTO);
         return ObjectMapper.parseObject(repository.save(entity), UserDTO.class);
     }
 
     public void delete(Long id) {
-        User entity = repository.findById(id).orElseThrow();
+        User entity = repository.findById(id).orElseThrow(
+                () -> new UserException("Não foi possível encontrar um usuário com o id: " + id)
+        );
         repository.delete(entity);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username);
-        if(user == null) throw new UsernameNotFoundException("User " + username + " not found!");
-        return user;
+        return repository.findByUsername(username).orElseThrow(
+                () -> new UserException("Não foi possivel encontrar o usuário: " + username)
+        );
     }
 
     private void update(User entity, UserDTO userDTO) {
-        if(userDTO == null) throw new RuntimeException("Usuário nulo");
         if(StringUtils.isNotBlank(userDTO.getUsername())) entity.setUsername(userDTO.getUsername());
         if(StringUtils.isNotBlank(userDTO.getPassword())) entity.setPassword(userDTO.getPassword());
         if(userDTO.getRoles() != null) entity.setRoles(userDTO.getRoles());

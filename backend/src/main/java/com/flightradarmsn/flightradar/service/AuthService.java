@@ -1,5 +1,7 @@
 package com.flightradarmsn.flightradar.service;
 
+import com.flightradarmsn.flightradar.exceptions.AuthenticationException;
+import com.flightradarmsn.flightradar.exceptions.RegisterException;
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
 import com.flightradarmsn.flightradar.model.dto.*;
 import com.flightradarmsn.flightradar.model.entities.Person;
@@ -10,13 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -45,12 +46,17 @@ public class AuthService {
     * */
     @Transactional
     public void register(RegisterDTO data) {
+        if(data == null) throw new RegisterException("O usuário não pode ser nulo");
         PersonDTO person = new PersonDTO();
         person.setName(data.getName());
         person.setEmail(data.getEmail());
         person.setBirthDate(data.getBirthDate());
-        person = personService.save(person);
-        userService.save(data, person);
+        try {
+            person = personService.save(person);
+            userService.save(data, person);
+        } catch(Exception e) {
+            throw new RegisterException("Já existe um usuário com este email, por favor tente outro");
+        }
         logger.info("Usuario cadastrado com sucesso");
     }
 
@@ -58,13 +64,23 @@ public class AuthService {
     * Metodo de login
     * */
     public TokenDTO signIn(AccountCredentials credentials) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
-        );
-        var entity = userService.findByUsername(credentials.getUsername());
-        if(entity == null) throw new RuntimeException("User is null");
-        logger.info("Login realizado com sucesso");
-        return tokenProvider.createToken(credentials.getUsername(), entity.getRoles().stream().map(Enum::name).toList());
+        if(credentials == null) throw new AuthenticationException("As credenciais não podem ser nulas");
+        if(credentials.getUsername().isBlank() || credentials.getUsername() == null) {
+            throw new AuthenticationException("O usuário não pode estar vazio");
+        }
+        if(credentials.getPassword().isBlank() || credentials.getPassword() == null) {
+            throw new AuthenticationException("A senha não pode estar vazia");
+        }
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
+            );
+            var entity = userService.findByUsername(credentials.getUsername());
+            logger.info("Login realizado com sucesso");
+            return tokenProvider.createToken(credentials.getUsername(), entity.getRoles().stream().map(Enum::name).toList());
+        } catch(BadCredentialsException e) {
+            throw new AuthenticationException("Credenciais incorretas");
+        }
     }
 
     /*
@@ -76,8 +92,7 @@ public class AuthService {
     * sensiveis
     * */
     public TokenDTO refreshToken(String username, String refreshToken) {
-        var user = userService.loadUserByUsername(username);
-        if(user == null) throw new RuntimeException("User is null");
+        userService.loadUserByUsername(username);
         logger.info("Token atualizado com sucesso");
         return tokenProvider.refreshToken(refreshToken);
     }
@@ -137,8 +152,12 @@ public class AuthService {
     private UserDTO updateUserInformations(User user, ProfileDTO profileDTO) {
         user.setUsername(profileDTO.getEmail());
         if(StringUtils.isNotEmpty(profileDTO.getNewPassword())) {
-            if(StringUtils.isBlank(profileDTO.getCurrentPassword())) throw new RuntimeException("Senha atual vazia!");
-            if(!passwordEncoder.matches(profileDTO.getCurrentPassword(), user.getPassword())) throw new RuntimeException("Senha incorreta!");
+            if(StringUtils.isBlank(profileDTO.getCurrentPassword())) {
+                throw new AuthenticationException("A senha é obrigatória");
+            }
+            if(!passwordEncoder.matches(profileDTO.getCurrentPassword(), user.getPassword())) {
+                throw new AuthenticationException("Senha incorreta");
+            }
             user.setPassword(passwordEncoder.encode(profileDTO.getNewPassword()));
         }
         return ObjectMapper.parseObject(user, UserDTO.class);

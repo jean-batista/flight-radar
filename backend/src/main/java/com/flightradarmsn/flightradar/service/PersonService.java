@@ -1,5 +1,6 @@
 package com.flightradarmsn.flightradar.service;
 
+import com.flightradarmsn.flightradar.exceptions.PersonException;
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
 import com.flightradarmsn.flightradar.model.dto.PersonDTO;
 import com.flightradarmsn.flightradar.model.entities.Person;
@@ -16,12 +17,15 @@ public class PersonService {
     private PersonRepository repository;
 
     public PersonDTO save(PersonDTO person) {
+        if(person == null) throw new PersonException("Os dados não podem ser nulos");
         Person entity = ObjectMapper.parseObject(person, Person.class);
         return ObjectMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public PersonDTO findById(Long id) {
-        Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+        Person entity = repository.findById(id).orElseThrow(
+                () -> new PersonException("Não foi possível encontrar uma pessoa com o id: " + id)
+        );
         return ObjectMapper.parseObject(entity, PersonDTO.class);
     }
 
@@ -31,13 +35,17 @@ public class PersonService {
     }
 
     public PersonDTO update(PersonDTO person) {
-        Person entity = repository.findById(person.getId()).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+        Person entity = repository.findById(person.getId()).orElseThrow(
+                () -> new PersonException("Não foi possível encontrar uma pessoa com o id: " + person.getId())
+        );
         update(entity, person);
         return ObjectMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
-        Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+        Person entity = repository.findById(id).orElseThrow(
+                () -> new PersonException("Não foi possível encontrar uma pessoa com o id: " + id)
+        );
         repository.delete(entity);
     }
 

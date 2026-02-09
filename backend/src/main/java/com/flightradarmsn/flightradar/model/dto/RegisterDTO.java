@@ -1,5 +1,8 @@
 package com.flightradarmsn.flightradar.model.dto;
 
+import com.flightradarmsn.flightradar.validations.annotations.AgeValidation;
+import jakarta.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -15,9 +18,21 @@ import java.util.Objects;
  * */
 
 public class RegisterDTO implements Serializable {
+
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
+
+    @NotNull(message = "A data de nascimento é obrigatória")
+    @Past(message = "A data de nascimento deve ser no passado")
+    @AgeValidation(message = "A idade mínima é de 18 anos")
     private LocalDate birthDate;
+
+    @NotBlank(message = "O email é obrigatório")
+    @Email
     private String email;
+
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 4, message = "A senha deve possuir pelo menos 8 caracteres")
     private String password;
 
     public RegisterDTO() {

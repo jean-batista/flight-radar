@@ -1,17 +1,16 @@
 package com.flightradarmsn.flightradar.security;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
+
+import java.io.IOException;
 
 public class JwtTokenFilter extends GenericFilterBean {
 
@@ -39,12 +38,18 @@ public class JwtTokenFilter extends GenericFilterBean {
             if(bearerToken.contains("Bearer ")) token = bearerToken.substring("Bearer ".length());
         }
 
-        if(!token.isBlank() && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            if(authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if(!token.isBlank() && jwtTokenProvider.validateToken(token)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                if(authentication != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+        } catch(Exception e) {
+            SecurityContextHolder.clearContext();
+            request.setAttribute("access_denied_reason", e.getMessage());
         }
+
         filter.doFilter(request, response);
     }
     
