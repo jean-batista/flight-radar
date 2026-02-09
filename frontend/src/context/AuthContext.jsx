@@ -1,4 +1,4 @@
-// Context
+// Hooks
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
-    const [loading, setLoding] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     // Verifica se possui um usuario autenticado
     useEffect(() => {
@@ -18,18 +18,20 @@ export const AuthProvider = ({ children }) => {
             setUser({ username, token, roles: [...roles.split(",")] });
         }
 
-        setLoding(false);
+        setLoading(false);
     }, []);
 
     // Salva as informacoes do usuario no localStorage
     useEffect(() => {
-        if(user !== null) localStorage.setItem("username", user.username);
-        if(user !== null) localStorage.setItem("token", user.token);
-        if(user !== null) localStorage.setItem("roles", user.roles);
+        if(user !== null) {
+            localStorage.setItem("username", user.username);
+            localStorage.setItem("token", user.token);
+            localStorage.setItem("roles", user.roles);
+        }
     }, [user]);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, loading }}>
+        <AuthContext.Provider value={{ user, setUser, loading, setLoading }}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,14 +1,15 @@
 // CSS
 import "./Login.css";
 
+// Components
+import Message from "../../components/Message";
+
 // Hooks
 import { useEffect, useState } from "react";
+import { useLogin } from "../../hooks/useLogin";
 
 // React Router
 import { NavLink, useNavigate } from "react-router-dom";
-
-// Backend
-import backend from "../../services/backend";
 
 // Context
 import { useAuthValue } from "../../context/AuthContext";
@@ -17,37 +18,27 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-
-  const { user, setUser, loading } = useAuthValue();
+  const { user, loading: authLoading } = useAuthValue();
+  const { login, info, loading } = useLogin();
   const navigate = useNavigate();
+
 
   // Verifica se existe um usuário logado
   useEffect(() => {
-    if(user && !loading) {
+    if(user && !authLoading) {
       navigate("/");
     }
-  }, [user, loading]);
+  }, [user, authLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await backend.post("/auth/signin", { username: email, password });
-      setUser({
-        username: response.data.username,
-        token: response.data.token,
-        roles: response.data.roles
-      });
-      navigate("/");
-    } catch(error) {
-      setError(error.message);
-    }
+    await login({ email, password });
 
   }
 
   // Estado de Carregamento
-  if(loading) return <div>Carregando...</div>;
+  if(authLoading && !user) return <div>Carregando...</div>;
 
   return (
     <main className="login-container">
@@ -56,18 +47,27 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="field">
           <label htmlFor="password">Senha</label>
-          <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
-        {error && <p className="form-error">{error}</p>}
+        {info && <Message type={info.type} message={info.message} />}
         <div className="actions">
-            {/* <span>Não tem uma conta?<a href="#">Registre-se</a></span> */}
             <span>Não tem uma conta? <NavLink to="/cadastro">Registre-se</NavLink></span>
         </div>
-        <input type="submit" value="Login" className="btn" />
+        <input type="submit" value={!loading ? "Login" : "Carregando..."} className="btn" />
       </form>
     </main>
   )

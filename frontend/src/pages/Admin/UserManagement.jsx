@@ -4,77 +4,94 @@ import "./UserManagement.css";
 // Components
 import EditUser from "../../components/EditUser";
 import DeleteUser from "../../components/DeleteUser";
+import Message from "../../components/Message";
 
 // Hooks
 import { useEffect, useState } from "react";
+import { useUpdateUserByAdmin } from "../../hooks/useUpdateUserByAdmin";
+import { useDeleteUser } from "../../hooks/useDeleteUser";
 
 // React Router
 import { useNavigate } from "react-router-dom";
 
-// Backend
-import backend from "../../services/backend";
-
 // Context
 import { useAuthValue } from "../../context/AuthContext";
 
+// Axios
+import { useAxios } from "../../hooks/useAxios";
+
+// Utils
+import { equals } from "../../utils/StringUtils";
+
 const UserManagement = () => {
 
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [info, setInfo] = useState(null);
     const [systemUsers, setSystemUsers] = useState([]);
     const [action, setAction] = useState(null);
-
-    const { user: admin, loading } = useAuthValue();
+    const { user: admin, loading: authLoading } = useAuthValue();
+    const { request } = useAxios(admin?.token);
+    const { update, info: updateInfo, loading: updateLoading } = useUpdateUserByAdmin();
+    const { deleteUser, info: deleteInfo, loading: deleteLoading } = useDeleteUser();
     const navigate = useNavigate();
 
     // Verifica se existe um usuário logado e se seu acesso é permitido
     useEffect(() => {
-        if(!admin && !loading) navigate("/");
+        if(!admin && !authLoading) navigate("/");
         if(admin !== null && !admin.roles.includes("ADMIN")) {
             window.alert("Acesso não autorizado!");
             navigate("/");
         }
-    }, [admin, loading]);
+    }, [admin, authLoading]);
 
     // Carrega os usuarios
     useEffect(() => {
+        if(!admin) return;
         const fetchData = async() => {
-            const response = await backend.get("/api/admin/v1", { headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            } });
+            const response = await request("BACKEND", "/api/admin/v1");
+            if(response.error) {
+                setInfo(response.error);
+                return;
+            }
             setSystemUsers(response.data);
         }
         fetchData();
-    }, [admin, loading]);
+    }, [admin, authLoading]);
 
-    const getUserById = (id) => {
-        const selectedUser = systemUsers.find((selectedUser) => selectedUser.id === id);
-        setSelectedUser(selectedUser);
+    // Define a acao do admin (EDIT ou DELETE) e abre a tela correspondente
+    const userAction = async (id, action) => {
+        const response = await request("BACKEND", `/api/admin/v1/${id}`);
+        if(response.error) {
+            setInfo(response.error);
+            return;
+        }
+        setAction({ type: action, user: response.data });
     }
 
-    const editPersonById = (id) => {
-        getUserById(id);
-        setAction("EDIT");
+    const updateUserAction = async ({ name, email }) => {
+        update({ userId: action.user.id, name, email });
     }
-    
-    const deleteUserById = (id) => {
-        getUserById(id);
-        setAction("DELETE");
+
+    // admin: { password, confirmPassword, confirm }
+    const deleteUserAction = async ({ userId, admin }) => {
+        deleteUser({ userId, admin });
     }
 
     const closeScreen = async() => {
-        const response = await backend.get("/api/admin/v1", { headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-        } });
+        const response = await request("BACKEND", "/api/admin/v1");
+        if(response.error) {
+            setInfo(response.error);
+            return;
+        }
         setSystemUsers(response.data);
         setAction(null);
-        setSelectedUser(null);
     }
 
     // Estado de Carregamento
-    if(loading) return <div>Carregando...</div>;
+    if(authLoading) return <div>Carregando...</div>;
 
     return (
         <main className="user-management-container">
+            {info && <Message type={info.type} message={info.message} />}
             <h1>Usuários Cadastrados</h1>
             <table>
                 <thead>
@@ -86,36 +103,46 @@ const UserManagement = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {systemUsers && systemUsers.length > 0 && systemUsers.map((selectedUser) => (
-                        <tr key={selectedUser.person.id}>
-                            <td>{selectedUser.person.name}</td>
-                            <td>{selectedUser.person.email}</td>
+                    {systemUsers && systemUsers.length > 0 && systemUsers.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.person.name}</td>
+                            <td>{user.person.email}</td>
                             <td>
-                                {selectedUser.roles.includes("ADMIN") ? "Administrador" : "Usuário Comum"}
+                                {user.roles.includes("ADMIN") ? "Administrador" : "Usuário Comum"}
                             </td>
                             <td>
-                                {admin && admin.username === selectedUser.username && (
-                                    <>
-                                        <button className="edit-button disabled"  disabled>Editar</button>
-                                        <button className="delete-button disabled" disabled>Excluir</button>
-                                    </>
-                                )}
-                                {admin && admin.username !== selectedUser.username && (
-                                    <>
-                                        <button className="edit-button" onClick={() => editPersonById(selectedUser.person.id)}>Editar</button>
-                                        <button className="delete-button" onClick={() => deleteUserById(selectedUser.person.id)}>Excluir</button>
-                                    </>
-                                )}
+                                <button 
+                                    className="edit-button" 
+                                    disabled={admin && equals(admin.username, user.username) ? true : false}
+                                    onClick={() => userAction(user.id, "EDIT")}
+                                >Editar</button>
+                                <button 
+                                    className="delete-button"
+                                    disabled={admin && equals(admin.username, user.username) ? true : false}
+                                    onClick={() => userAction(user.id, "DELETE")}
+                                >Excluir</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            {selectedUser && action === "EDIT" && (
-                <EditUser user={selectedUser} close={closeScreen} />
+            {action && action.type === "EDIT" && (
+                <EditUser
+                    user={action.user}
+                    updateUser={updateUserAction}
+                    info={updateInfo}
+                    loading={updateLoading}
+                    close={closeScreen}
+                />
             )}
-            {selectedUser && action === "DELETE" && (
-                <DeleteUser user={selectedUser} close={closeScreen} />
+            {action && action.type === "DELETE" && (
+                <DeleteUser
+                    userId={action.user.id}
+                    deleteUser={deleteUserAction}
+                    info={deleteInfo}
+                    loading={deleteLoading}
+                    close={closeScreen}
+                />
             )}
         </main>
     );

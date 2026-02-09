@@ -1,0 +1,21 @@
+/* Mensagens */
+
+.message {
+    width: 100%;
+    padding: 5px;
+    margin: 5px auto;
+    margin-top: 4px;
+    display: block;
+    text-align: center;
+    font-size: 0.75em;
+}
+
+.message-error {
+    color: #dc2626;
+    border: 1px solid #dc2626;
+}
+
+.message-success {
+    color: #109010;
+    border: 1px solid #109010;
+}

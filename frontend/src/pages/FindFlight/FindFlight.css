@@ -111,3 +111,8 @@
     color: #ffffff;
     font-size: 1.5em;
 }
+
+.find-flight-container .error * {
+    color: #ffffff !important;
+    border: none !important;
+}

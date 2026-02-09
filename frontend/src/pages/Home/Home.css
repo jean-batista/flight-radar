@@ -22,11 +22,16 @@
     color: white;
     padding: 20px 40px;
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 1.5em;
     font-weight: bold;
     text-align: center;
     z-index: 401;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.home-container .map-error * {
+    color: white !important;
+    border: none !important;
 }
 
 /* Leaflet */

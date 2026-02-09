@@ -1,6 +1,9 @@
 // CSS
 import "./Navbar.css";
 
+// Context
+import { useLogout } from "../hooks/useLogout";
+
 // React Router
 import { NavLink } from "react-router-dom";
 
@@ -14,12 +17,8 @@ import { useAuthValue } from "../context/AuthContext";
 
 const Navbar = () => {
 
-  const { user, setUser } = useAuthValue();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    setUser(null);
-  }
+  const { user } = useAuthValue();
+  const { logout } = useLogout();
 
   return (
     <nav className="navbar-container">
@@ -62,7 +61,7 @@ const Navbar = () => {
             }
             {user && (
               <li>
-                <button className="logout-btn" onClick={handleLogout}>Sair</button>
+                <button className="logout-btn" onClick={logout}>Sair</button>
               </li>
             )}
         </ul>

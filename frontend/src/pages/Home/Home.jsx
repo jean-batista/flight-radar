@@ -2,19 +2,24 @@
 import "./Home.css";
 import "leaflet/dist/leaflet.css";
 
+// Hooks
+import { useEffect, useState } from "react";
+
+// Axios
+import { useAxios } from "../../hooks/useAxios";
+
+// Components
+import Message from "../../components/Message";
+import PlaneInformations from "../../components/PlaneInformations";
+
 // Open Street Map / Leaflet
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import Leaflet from "leaflet";
 import 'leaflet-rotatedmarker';
 
-// Hooks
-import { useEffect, useState } from "react";
+// Icons
+import planeIcon from "../../assets/plane-up-solid-full.svg"
 
-// Componentes
-import PlaneInformations from "../../components/PlaneInformations";
-
-// API
-import api from "../../services/api";
 
 const Home = () => {
 
@@ -25,23 +30,25 @@ const Home = () => {
     const [plan, setPlan] = useState(null);
 
     // Capturar errors
-    const [error, setError] = useState(null);
+    const [info, setInfo] = useState(null);
     
     // Coordenadas do Brasil
     const coordinates = [-15, -60];
 
+    const { request } = useAxios();
+
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await api.get("/api/simulation/v1/status");
-                setStates(response.data);
-                setError(null);
-            } catch(error) {
-                setError("Erro ao se conectar com o servidor.");
+            const response = await request("API", "/api/simulation/v1/status");
+            if(response.error) {
+                setInfo(response.error);
+                return;
             }
+            setStates(response.data);
+            setInfo(null);
         }
 
-        if(states === null) fetchData();
+        if(!states) fetchData();
         
         const intervalId = setInterval(fetchData, 2000);
 
@@ -52,14 +59,14 @@ const Home = () => {
 
     // Mantem as informacoes de plan atualizadas
     useEffect(() => {
-        if(plan !== null) {
+        if(plan) {
             const fetchData = async () => {
-                try {
-                    const response = await api.get("/api/flights/v1/" + plan.id);
-                    setPlan(response.data);
-                } catch (error) {
-                    setError("Erro ao se conectar com o servidor.");
+                const response = await request("API", `/api/flights/v1/${plan.id}`);
+                if(response.error) {
+                    setInfo(response.error);
+                    return;
                 }
+                setPlan(response.data);
             }
             fetchData();
         }
@@ -67,7 +74,7 @@ const Home = () => {
 
     // Fazendo o icone personalizado
     const customIcon = new Leaflet.Icon({
-        iconUrl: "src/assets/plane-up-solid-full.svg",
+        iconUrl: planeIcon,
         iconSize: [24, 24],
         iconAnchor: [12, 12],
         popupAnchor: [0, -16],
@@ -88,17 +95,21 @@ const Home = () => {
 
     // Busca um plano de voo de acordo com um id
     const getFlightPlan = async (id) => {
-        try {
-            const response = await api.get(`/api/flights/v1/${id}`);
-            setPlan(response.data);
-        } catch(error) {
-            setError("Erro ao se conectar com o servidor.");
+        const response = await request("API", `/api/flights/v1/${id}`);
+        if(response.info) {
+            setInfo(response.error);
+            return;
         }
+        setPlan(response.data);
     }
 
   return (
     <div className="home-container">
-        {error && <div className="map-error">{error}</div>}
+        {info && (
+            <div className="map-error">
+                <Message type={info.type} message={info.message} />
+            </div>
+        )}
         <MapContainer className="map-container" center={coordinates}  zoom={5} scrollWheelZoom={false} minZoom={2} maxZoom={10}>
             {/* Define o servidor de tiles, nesse caso o Open Street Map */}
             <TileLayer
