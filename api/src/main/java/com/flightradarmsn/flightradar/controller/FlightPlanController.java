@@ -1,9 +1,10 @@
 package com.flightradarmsn.flightradar.controller;
 
 
-import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
-import com.flightradarmsn.flightradar.model.dto.FlightPlanMinDTO;
-import com.flightradarmsn.flightradar.model.dto.SearchFlightDTO;
+import com.flightradarmsn.flightradar.model.dto.request.FlightPlanDTO;
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanResponseDTO;
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanMinResponseDTO;
+import com.flightradarmsn.flightradar.model.dto.request.SearchFlightDTO;
 import com.flightradarmsn.flightradar.service.FlightPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,27 +19,32 @@ public class FlightPlanController {
     private FlightPlanService service;
 
     @PostMapping
-    public FlightPlanDTO save(@RequestBody FlightPlanDTO flightPlanDTO) {
+    public FlightPlanResponseDTO save(@RequestBody FlightPlanDTO flightPlanDTO) {
         return service.save(flightPlanDTO);
     }
 
     @GetMapping("/{id}")
-    public FlightPlanDTO findById(@PathVariable Long id) {
+    public FlightPlanResponseDTO findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @GetMapping
-    public List<FlightPlanDTO> findAll() {
+    public List<FlightPlanResponseDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/min")
-    public List<FlightPlanMinDTO> findAllMin() {
+    public List<FlightPlanMinResponseDTO> findAllMin() {
         return service.findAllMin();
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+
     @GetMapping("/search")
-    public List<FlightPlanDTO> searchFlights(@ModelAttribute SearchFlightDTO criteria) {
+    public List<FlightPlanResponseDTO> searchFlights(@ModelAttribute SearchFlightDTO criteria) {
         return service.searchFlights(criteria);
     }
 

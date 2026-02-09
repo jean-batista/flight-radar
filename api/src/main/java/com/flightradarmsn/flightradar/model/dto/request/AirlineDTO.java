@@ -1,4 +1,4 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.request;
 
 import java.io.Serializable;
 import java.util.Objects;

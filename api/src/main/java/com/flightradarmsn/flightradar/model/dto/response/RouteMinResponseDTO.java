@@ -1,15 +1,15 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import java.util.List;
 import java.util.Objects;
 
-public class RouteMinDTO {
+public class RouteMinResponseDTO {
 
     private Long id;
     private String name;
-    private List<CoordinatesDTO> waypoints;
+    private List<CoordinatesResponseDTO> waypoints;
 
-    public RouteMinDTO() {
+    public RouteMinResponseDTO() {
     }
 
     public Long getId() {
@@ -28,18 +28,18 @@ public class RouteMinDTO {
         this.name = name;
     }
 
-    public List<CoordinatesDTO> getWaypoints() {
+    public List<CoordinatesResponseDTO> getWaypoints() {
         return waypoints;
     }
 
-    public void setWaypoints(List<CoordinatesDTO> waypoints) {
+    public void setWaypoints(List<CoordinatesResponseDTO> waypoints) {
         this.waypoints = waypoints;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RouteMinDTO that = (RouteMinDTO) o;
+        RouteMinResponseDTO that = (RouteMinResponseDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(waypoints, that.waypoints);
     }
 

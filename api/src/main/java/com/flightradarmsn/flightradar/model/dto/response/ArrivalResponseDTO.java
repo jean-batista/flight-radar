@@ -1,4 +1,4 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-public class ArrivalDTO implements Serializable {
+public class ArrivalResponseDTO implements Serializable {
 
-    private AirportDTO airport ;
+    private AirportResponseDTO airport ;
     private String timezone;
     private String iata;
     private String icao;
@@ -25,14 +25,14 @@ public class ArrivalDTO implements Serializable {
     @JsonProperty(value = "actual_runway")
     private OffsetDateTime actualRunway;
 
-    public ArrivalDTO() {
+    public ArrivalResponseDTO() {
     }
 
-    public AirportDTO getAirport() {
+    public AirportResponseDTO getAirport() {
         return airport;
     }
 
-    public void setAirport(AirportDTO airport) {
+    public void setAirport(AirportResponseDTO airport) {
         this.airport = airport;
     }
 
@@ -127,7 +127,7 @@ public class ArrivalDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        ArrivalDTO that = (ArrivalDTO) o;
+        ArrivalResponseDTO that = (ArrivalResponseDTO) o;
         return Objects.equals(airport, that.airport) && Objects.equals(timezone, that.timezone) && Objects.equals(iata, that.iata) && Objects.equals(icao, that.icao) && Objects.equals(terminal, that.terminal) && Objects.equals(gate, that.gate) && Objects.equals(baggage, that.baggage) && Objects.equals(scheduled, that.scheduled) && Objects.equals(estimated, that.estimated) && Objects.equals(actual, that.actual) && Objects.equals(estimatedRunway, that.estimatedRunway) && Objects.equals(actualRunway, that.actualRunway);
     }
 

@@ -1,4 +1,4 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,14 +26,11 @@ public class LiveDTO implements Serializable {
     private Boolean isGround;
 
     public LiveDTO() {
+        updated = LocalDateTime.now();
     }
 
     public LocalDateTime getUpdated() {
         return updated;
-    }
-
-    public void setUpdated(LocalDateTime updated) {
-        this.updated = updated;
     }
 
     public Double getLatitude() {
@@ -103,8 +100,8 @@ public class LiveDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        LiveDTO liveDTO = (LiveDTO) o;
-        return Objects.equals(updated, liveDTO.updated) && Objects.equals(latitude, liveDTO.latitude) && Objects.equals(longitude, liveDTO.longitude) && Objects.equals(altitude, liveDTO.altitude) && Objects.equals(direction, liveDTO.direction) && Objects.equals(speedHorizontal, liveDTO.speedHorizontal) && Objects.equals(speedVertical, liveDTO.speedVertical) && Objects.equals(progress, liveDTO.progress) && Objects.equals(isGround, liveDTO.isGround);
+        LiveDTO liveResponseDTO = (LiveDTO) o;
+        return Objects.equals(updated, liveResponseDTO.updated) && Objects.equals(latitude, liveResponseDTO.latitude) && Objects.equals(longitude, liveResponseDTO.longitude) && Objects.equals(altitude, liveResponseDTO.altitude) && Objects.equals(direction, liveResponseDTO.direction) && Objects.equals(speedHorizontal, liveResponseDTO.speedHorizontal) && Objects.equals(speedVertical, liveResponseDTO.speedVertical) && Objects.equals(progress, liveResponseDTO.progress) && Objects.equals(isGround, liveResponseDTO.isGround);
     }
 
     @Override

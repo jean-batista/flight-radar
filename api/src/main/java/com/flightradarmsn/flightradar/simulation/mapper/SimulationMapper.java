@@ -1,6 +1,7 @@
 package com.flightradarmsn.flightradar.simulation.mapper;
 
-import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanResponseDTO;
+import com.flightradarmsn.flightradar.model.entities.FlightPlan;
 import com.flightradarmsn.flightradar.simulation.state.FlightState;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,8 @@ public class SimulationMapper {
     * Cria um estado de voo de acordo com as
     * informcaoes de um plano de voo
     * */
-    public static FlightState flightPlanToFlightState(FlightPlanDTO plan) {
+    public static FlightState flightPlanToFlightState(FlightPlan plan) {
+        if(plan == null) throw new IllegalArgumentException("O plano de voo não pode ser nulo");
         return new FlightState(
                 plan.getId(),
                 plan.getFlight().getNumber(),
@@ -35,8 +37,9 @@ public class SimulationMapper {
     * Cria um plano de voo de acordo com as
     * informacoes de um estado
     * */
-    public static FlightPlanDTO flightStateToFlightPlan(FlightState state) {
-        FlightPlanDTO plan = new FlightPlanDTO();
+    public static FlightPlanResponseDTO flightStateToFlightPlan(FlightState state) {
+        if(state == null) throw new IllegalArgumentException("O State não pode ser nulo");
+        FlightPlanResponseDTO plan = new FlightPlanResponseDTO();
         plan.getLive().setAltitude(state.getCurrentAltitude());
         plan.getLive().setDirection(state.getDirection());
         plan.getLive().setSpeedHorizontal(state.getSpeedHorizontal());

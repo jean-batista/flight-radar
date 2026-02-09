@@ -1,21 +1,15 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CoordinatesDTO implements Serializable {
+public class CoordinatesResponseDTO implements Serializable {
 
     private Double latitude;
     private Double longitude;
     private Double direction;
 
-    public CoordinatesDTO() {
-    }
-
-    public CoordinatesDTO(Double latitude, Double longitude, Double direction) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.direction = direction;
+    public CoordinatesResponseDTO() {
     }
 
     public Double getLatitude() {
@@ -45,7 +39,7 @@ public class CoordinatesDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CoordinatesDTO that = (CoordinatesDTO) o;
+        CoordinatesResponseDTO that = (CoordinatesResponseDTO) o;
         return Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(direction, that.direction);
     }
 

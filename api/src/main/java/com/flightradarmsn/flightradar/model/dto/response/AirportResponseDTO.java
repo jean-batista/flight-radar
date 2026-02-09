@@ -1,11 +1,11 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AirportDTO implements Serializable {
+public class AirportResponseDTO implements Serializable {
 
     private Long id;
 
@@ -42,7 +42,7 @@ public class AirportDTO implements Serializable {
     @JsonProperty(value = "city_name")
     private String cityName;
 
-    public AirportDTO() {
+    public AirportResponseDTO() {
     }
 
     public Long getId() {
@@ -160,7 +160,7 @@ public class AirportDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        AirportDTO that = (AirportDTO) o;
+        AirportResponseDTO that = (AirportResponseDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(airportName, that.airportName) && Objects.equals(iataCode, that.iataCode) && Objects.equals(icaoCode, that.icaoCode) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(geonameId, that.geonameId) && Objects.equals(timezone, that.timezone) && Objects.equals(gmt, that.gmt) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(countryName, that.countryName) && Objects.equals(countryIso2, that.countryIso2) && Objects.equals(cityIataCode, that.cityIataCode) && Objects.equals(cityName, that.cityName);
     }
 

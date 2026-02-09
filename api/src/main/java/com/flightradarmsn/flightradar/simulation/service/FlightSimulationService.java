@@ -1,12 +1,13 @@
 package com.flightradarmsn.flightradar.simulation.service;
 
 import com.flightradarmsn.flightradar.mapper.ObjectMapper;
-import com.flightradarmsn.flightradar.model.dto.CoordinatesDTO;
-import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
+import com.flightradarmsn.flightradar.model.entities.Coordinates;
 import com.flightradarmsn.flightradar.model.entities.FlightPlan;
 import com.flightradarmsn.flightradar.model.enums.FlightPhase;
+import com.flightradarmsn.flightradar.repository.FlightPlanRepository;
 import com.flightradarmsn.flightradar.simulation.cache.FlightPlanMemoryDatabase;
 import com.flightradarmsn.flightradar.simulation.cache.FlightStateMemoryDatabase;
+import com.flightradarmsn.flightradar.simulation.exceptions.SimulationResourceNotFoundException;
 import com.flightradarmsn.flightradar.simulation.mapper.SimulationMapper;
 import com.flightradarmsn.flightradar.simulation.service.utils.FlightSimulationServiceUtils;
 import com.flightradarmsn.flightradar.simulation.state.FlightState;
@@ -32,6 +33,9 @@ import static com.flightradarmsn.flightradar.simulation.service.utils.Simulation
 public class FlightSimulationService {
 
     @Autowired
+    private FlightPlanRepository flightPlanRepository;
+
+    @Autowired
     private FlightStateMemoryDatabase flightStateMemoryDatabase;
 
     @Autowired
@@ -43,8 +47,10 @@ public class FlightSimulationService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // Metodo que inicia a simulacao
-    public void start(FlightPlanDTO plan) {
-        List<CoordinatesDTO> waypoints = plan.getRoute().getWaypoints();
+    public void start(FlightPlan plan) {
+        if(plan == null) throw new IllegalArgumentException("O plano de voo não pode ser nulo");
+
+        List<Coordinates> waypoints = plan.getRoute().getWaypoints();
 
         if(!flightStateMemoryDatabase.flightStateExists(plan.getId()) && plan.getRoute() != null) {
 
@@ -95,7 +101,7 @@ public class FlightSimulationService {
             * */
             if (!state.hasFinished()) {
                 // Obtemos o alvo atual para calcular a distancia
-                CoordinatesDTO targetPosition = state.getWaypoints().get(state.getNextWaypointIndex());
+                Coordinates targetPosition = state.getWaypoints().get(state.getNextWaypointIndex());
                 double distance = utils.calculateDistance(state.getCurrentPosition(), targetPosition);
 
                 // A chamada para os metodos utilitarios agora e mais simples e segura
@@ -210,7 +216,9 @@ public class FlightSimulationService {
             flightStateMemoryDatabase.update(state);
 
             // Obtem o plano de voo referente ao estado
-            FlightPlan planToUpdate = flightPlanMemoryDatabase.findFlightPlanById(state.getFlightPlanId());
+            FlightPlan planToUpdate = flightPlanMemoryDatabase.findFlightPlanById(state.getFlightPlanId()).orElseThrow(
+                    () -> new SimulationResourceNotFoundException("Não foi possível encontrar o plano de voo com o id: " + state.getFlightPlanId())
+            );
 
             /*
             * Caso o plano de voo for encontrado
@@ -221,6 +229,11 @@ public class FlightSimulationService {
                 flightPlanMemoryDatabase.update(planToUpdate);
             }
         }
+    }
+
+    public void updateDatabase() {
+        List<FlightPlan> list = flightPlanMemoryDatabase.findAll();
+        flightPlanRepository.saveAll(list);
     }
 
 }

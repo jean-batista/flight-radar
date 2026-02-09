@@ -1,5 +1,7 @@
-package com.flightradarmsn.flightradar.controller;
+package com.flightradarmsn.flightradar.simulation.controller;
 
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanResponseDTO;
+import com.flightradarmsn.flightradar.simulation.service.FlightPlanSimulationService;
 import com.flightradarmsn.flightradar.simulation.service.FlightStateService;
 import com.flightradarmsn.flightradar.simulation.state.FlightState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +17,27 @@ import java.util.List;
 public class SimulationController {
 
     @Autowired
-    private FlightStateService service;
+    private FlightStateService flightStateService;
+
+    @Autowired
+    private FlightPlanSimulationService flightPlanSimulationService;
 
     @GetMapping("/status/{id}")
     public FlightState findFlightStateByFlightPlanId(@PathVariable Long id) {
-        return service.findFlightStateByFlightPlanId(id);
+        return flightStateService.findFlightStateByFlightPlanId(id);
     }
 
     @GetMapping("/status")
     public List<FlightState> findAllFlightStates() {
-        return service.findAllFlightStates();
+        return flightStateService.findAllFlightStates();
     }
 
+    private FlightPlanResponseDTO findById(@PathVariable Long id) {
+        return flightPlanSimulationService.findById(id);
+    }
+
+    private List<FlightPlanResponseDTO> findAll() {
+        return flightPlanSimulationService.findAll();
+    }
 
 }

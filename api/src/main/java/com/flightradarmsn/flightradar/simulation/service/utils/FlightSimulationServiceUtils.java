@@ -1,6 +1,6 @@
 package com.flightradarmsn.flightradar.simulation.service.utils;
 
-import com.flightradarmsn.flightradar.model.dto.CoordinatesDTO;
+import com.flightradarmsn.flightradar.model.entities.Coordinates;
 import com.flightradarmsn.flightradar.model.entities.FlightPlan;
 import com.flightradarmsn.flightradar.simulation.state.FlightState;
 import org.slf4j.Logger;
@@ -22,8 +22,8 @@ public class FlightSimulationServiceUtils {
     // Atualiza a posicao do aviao
     public void advanceOnRoute(FlightState state, double step) {
         // 1. Obtém os dados mais recentes diretamente do estado do voo.
-        CoordinatesDTO currentPosition = state.getCurrentPosition();
-        CoordinatesDTO targetPosition = state.getWaypoints().get(state.getNextWaypointIndex());
+        Coordinates currentPosition = state.getCurrentPosition();
+        Coordinates targetPosition = state.getWaypoints().get(state.getNextWaypointIndex());
         double distance = calculateDistance(currentPosition, targetPosition);
 
         // Guarda de seguranca para evitar divisao por zero.
@@ -42,11 +42,11 @@ public class FlightSimulationServiceUtils {
             state.getTrail().add(state.getCurrentPosition());
         }
 
-        state.setCurrentPosition(new CoordinatesDTO(newLat, newLon, currentPosition.getDirection()));
+        state.setCurrentPosition(new Coordinates(newLat, newLon, currentPosition.getDirection()));
     }
 
     // Atualiza o estado no momento em que um waypoint e alcancado
-    public void processArrivalAtWaypoint(FlightState state, CoordinatesDTO targetPosition) {
+    public void processArrivalAtWaypoint(FlightState state, Coordinates targetPosition) {
         // Chegou ao waypoint
         state.setCurrentPosition(targetPosition);
         state.setNextWaypointIndex(state.getNextWaypointIndex() + 1);
@@ -65,7 +65,7 @@ public class FlightSimulationServiceUtils {
     }
 
     // Faz o calculo da distancia entre um trail e outro
-    public double calculateDistance(CoordinatesDTO currentPosition, CoordinatesDTO targetPosition) {
+    public double calculateDistance(Coordinates currentPosition, Coordinates targetPosition) {
         double dx = currentPosition.getLongitude() - targetPosition.getLongitude();
         double dy = currentPosition.getLatitude() - targetPosition.getLatitude();
         return Math.sqrt(dx * dx + dy * dy);
@@ -73,7 +73,7 @@ public class FlightSimulationServiceUtils {
 
     // Calcula a distancia ate o fim da rota
     public double calculateDistanceToEndOfRoute(FlightState state) {
-        CoordinatesDTO finalWaypoint = state.getWaypoints().getLast();
+        Coordinates finalWaypoint = state.getWaypoints().getLast();
         return calculateDistance(state.getCurrentPosition(), finalWaypoint);
     }
 

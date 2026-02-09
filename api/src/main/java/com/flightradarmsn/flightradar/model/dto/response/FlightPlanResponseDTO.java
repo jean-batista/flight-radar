@@ -1,4 +1,4 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightradarmsn.flightradar.model.enums.FlightPhase;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class FlightPlanDTO implements Serializable {
+public class FlightPlanResponseDTO implements Serializable {
 
     private Long id;
 
@@ -17,15 +17,15 @@ public class FlightPlanDTO implements Serializable {
     @JsonProperty(value = "flight_phase")
     private FlightPhase flightPhase;
 
-    private DepartureDTO departure;
-    private ArrivalDTO arrival;
-    private AirlineDTO airline;
-    private FlightDTO flight;
-    private AircraftDTO aircraft;
-    private RouteMinDTO route;
-    private LiveDTO live;
+    private DepartureResponseDTO departure;
+    private ArrivalResponseDTO arrival;
+    private AirlineResponseDTO airline;
+    private FlightResponseDTO flight;
+    private AircraftResponseDTO aircraft;
+    private RouteMinResponseDTO route;
+    private LiveResponseDTO live;
 
-    public FlightPlanDTO() {
+    public FlightPlanResponseDTO() {
     }
 
     public Long getId() {
@@ -52,66 +52,66 @@ public class FlightPlanDTO implements Serializable {
         this.flightPhase = flightPhase;
     }
 
-    public DepartureDTO getDeparture() {
+    public DepartureResponseDTO getDeparture() {
         return departure;
     }
 
-    public void setDeparture(DepartureDTO departure) {
+    public void setDeparture(DepartureResponseDTO departure) {
         this.departure = departure;
     }
 
-    public ArrivalDTO getArrival() {
+    public ArrivalResponseDTO getArrival() {
         return arrival;
     }
 
-    public void setArrival(ArrivalDTO arrival) {
+    public void setArrival(ArrivalResponseDTO arrival) {
         this.arrival = arrival;
     }
 
-    public AirlineDTO getAirline() {
+    public AirlineResponseDTO getAirline() {
         return airline;
     }
 
-    public void setAirline(AirlineDTO airline) {
+    public void setAirline(AirlineResponseDTO airline) {
         this.airline = airline;
     }
 
-    public FlightDTO getFlight() {
+    public FlightResponseDTO getFlight() {
         return flight;
     }
 
-    public void setFlight(FlightDTO flight) {
+    public void setFlight(FlightResponseDTO flight) {
         this.flight = flight;
     }
 
-    public AircraftDTO getAircraft() {
+    public AircraftResponseDTO getAircraft() {
         return aircraft;
     }
 
-    public void setAircraft(AircraftDTO aircraft) {
+    public void setAircraft(AircraftResponseDTO aircraft) {
         this.aircraft = aircraft;
     }
 
-    public RouteMinDTO getRoute() {
+    public RouteMinResponseDTO getRoute() {
         return route;
     }
 
-    public void setRoute(RouteMinDTO route) {
+    public void setRoute(RouteMinResponseDTO route) {
         this.route = route;
     }
 
-    public LiveDTO getLive() {
+    public LiveResponseDTO getLive() {
         return live;
     }
 
-    public void setLive(LiveDTO live) {
+    public void setLive(LiveResponseDTO live) {
         this.live = live;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FlightPlanDTO that = (FlightPlanDTO) o;
+        FlightPlanResponseDTO that = (FlightPlanResponseDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(flightDate, that.flightDate) && Objects.equals(flightPhase, that.flightPhase) && Objects.equals(departure, that.departure) && Objects.equals(arrival, that.arrival) && Objects.equals(airline, that.airline) && Objects.equals(flight, that.flight) && Objects.equals(aircraft, that.aircraft) && Objects.equals(route, that.route) && Objects.equals(live, that.live);
     }
 

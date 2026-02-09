@@ -1,6 +1,6 @@
 package com.flightradarmsn.flightradar.simulation.state;
 
-import com.flightradarmsn.flightradar.model.dto.CoordinatesDTO;
+import com.flightradarmsn.flightradar.model.entities.Coordinates;
 import com.flightradarmsn.flightradar.model.enums.FlightPhase;
 
 import java.time.OffsetDateTime;
@@ -38,13 +38,13 @@ public class FlightState {
     private Integer speedVertical;
 
     // Lista de waypoints
-    private List<CoordinatesDTO> waypoints;
+    private List<Coordinates> waypoints;
 
     // Waypoint atual
-    private CoordinatesDTO currentPosition;
+    private Coordinates currentPosition;
 
     // Waypoints ja percorridos
-    private List<CoordinatesDTO> trail = new ArrayList<>();
+    private List<Coordinates> trail = new ArrayList<>();
 
     // Indice do proximo waypoint
     private int nextWaypointIndex;
@@ -63,7 +63,7 @@ public class FlightState {
             Integer direction,
             Integer speedHorizontal,
             Integer speedVertical,
-            List<CoordinatesDTO> waypoints) {
+            List<Coordinates> waypoints) {
         this.flightPlanId = flightPlanId;
         this.flightNumber = flightNumber;
         this.cruiseAltitude = cruiseAltitude;
@@ -157,27 +157,27 @@ public class FlightState {
         this.speedVertical = speedVertical;
     }
 
-    public List<CoordinatesDTO> getWaypoints() {
+    public List<Coordinates> getWaypoints() {
         return waypoints;
     }
 
-    public void setWaypoints(List<CoordinatesDTO> waypoints) {
+    public void setWaypoints(List<Coordinates> waypoints) {
         this.waypoints = waypoints;
     }
 
-    public CoordinatesDTO getCurrentPosition() {
+    public Coordinates getCurrentPosition() {
         return currentPosition;
     }
 
-    public void setCurrentPosition(CoordinatesDTO currentPosition) {
+    public void setCurrentPosition(Coordinates currentPosition) {
         this.currentPosition = currentPosition;
     }
 
-    public List<CoordinatesDTO> getTrail() {
+    public List<Coordinates> getTrail() {
         return trail;
     }
 
-    public void setTrail(List<CoordinatesDTO> trail) {
+    public void setTrail(List<Coordinates> trail) {
         this.trail = trail;
     }
 

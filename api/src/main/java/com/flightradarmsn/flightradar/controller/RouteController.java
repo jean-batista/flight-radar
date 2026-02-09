@@ -1,6 +1,7 @@
 package com.flightradarmsn.flightradar.controller;
 
-import com.flightradarmsn.flightradar.model.dto.RouteDTO;
+import com.flightradarmsn.flightradar.model.dto.request.RouteDTO;
+import com.flightradarmsn.flightradar.model.dto.response.RouteResponseDTO;
 import com.flightradarmsn.flightradar.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +16,28 @@ public class RouteController {
     private RouteService service;
 
     @PostMapping
-    public RouteDTO save(@RequestBody RouteDTO route) {
-        return service.save(route);
+    public RouteResponseDTO save(@RequestBody RouteDTO routeDTO) {
+        return service.save(routeDTO);
     }
 
     @GetMapping("/{id}")
-    public RouteDTO findbyId(@PathVariable Long id) {
+    public RouteResponseDTO findbyId(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @GetMapping
-    public List<RouteDTO> findAll() {
+    public List<RouteResponseDTO> findAll() {
         return service.findAll();
+    }
+
+    @PutMapping
+    public RouteResponseDTO update(@RequestBody RouteResponseDTO route) {
+        return service.update(route);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 
 }

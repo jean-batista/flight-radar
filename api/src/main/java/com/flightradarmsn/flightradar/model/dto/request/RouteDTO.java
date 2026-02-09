@@ -1,5 +1,6 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.request;
 
+import com.flightradarmsn.flightradar.model.dto.response.CoordinatesResponseDTO;
 import com.flightradarmsn.flightradar.model.entities.Airport;
 
 import java.util.List;
@@ -7,21 +8,12 @@ import java.util.Objects;
 
 public class RouteDTO {
 
-    private Long id;
     private String name;
     private Airport origin;
     private Airport destination;
-    private List<CoordinatesDTO> waypoints;
+    private List<CoordinatesResponseDTO> waypoints;
 
     public RouteDTO() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -48,23 +40,23 @@ public class RouteDTO {
         this.destination = destination;
     }
 
-    public List<CoordinatesDTO> getWaypoints() {
+    public List<CoordinatesResponseDTO> getWaypoints() {
         return waypoints;
     }
 
-    public void setWaypoints(List<CoordinatesDTO> waypoints) {
+    public void setWaypoints(List<CoordinatesResponseDTO> waypoints) {
         this.waypoints = waypoints;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RouteDTO routeDTO = (RouteDTO) o;
-        return Objects.equals(id, routeDTO.id) && Objects.equals(name, routeDTO.name) && Objects.equals(origin, routeDTO.origin) && Objects.equals(destination, routeDTO.destination) && Objects.equals(waypoints, routeDTO.waypoints);
+        RouteDTO that = (RouteDTO) o;
+        return Objects.equals(name, that.name) && Objects.equals(origin, that.origin) && Objects.equals(destination, that.destination) && Objects.equals(waypoints, that.waypoints);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, origin, destination, waypoints);
+        return Objects.hash(name, origin, destination, waypoints);
     }
 }

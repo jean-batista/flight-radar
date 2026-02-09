@@ -1,4 +1,4 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,14 +6,15 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-public class DepartureDTO implements Serializable {
+public class ArrivalDTO implements Serializable {
 
-    private AirportDTO airport ;
+    private Long airportId ;
     private String timezone;
     private String iata;
     private String icao;
     private String terminal;
     private String gate;
+    private String baggage;
     private OffsetDateTime scheduled;
     private OffsetDateTime estimated;
     private OffsetDateTime actual;
@@ -24,15 +25,15 @@ public class DepartureDTO implements Serializable {
     @JsonProperty(value = "actual_runway")
     private OffsetDateTime actualRunway;
 
-    public DepartureDTO() {
+    public ArrivalDTO() {
     }
 
-    public AirportDTO getAirport() {
-        return airport;
+    public Long getAirportId() {
+        return airportId;
     }
 
-    public void setAirport(AirportDTO airport) {
-        this.airport = airport;
+    public void setAirportId(Long airportId) {
+        this.airportId = airportId;
     }
 
     public String getTimezone() {
@@ -73,6 +74,14 @@ public class DepartureDTO implements Serializable {
 
     public void setGate(String gate) {
         this.gate = gate;
+    }
+
+    public String getBaggage() {
+        return baggage;
+    }
+
+    public void setBaggage(String baggage) {
+        this.baggage = baggage;
     }
 
     public OffsetDateTime getScheduled() {
@@ -118,12 +127,12 @@ public class DepartureDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DepartureDTO that = (DepartureDTO) o;
-        return Objects.equals(airport, that.airport) && Objects.equals(timezone, that.timezone) && Objects.equals(iata, that.iata) && Objects.equals(icao, that.icao) && Objects.equals(terminal, that.terminal) && Objects.equals(gate, that.gate) && Objects.equals(scheduled, that.scheduled) && Objects.equals(estimated, that.estimated) && Objects.equals(actual, that.actual) && Objects.equals(estimatedRunway, that.estimatedRunway) && Objects.equals(actualRunway, that.actualRunway);
+        ArrivalDTO that = (ArrivalDTO) o;
+        return Objects.equals(airportId, that.airportId) && Objects.equals(timezone, that.timezone) && Objects.equals(iata, that.iata) && Objects.equals(icao, that.icao) && Objects.equals(terminal, that.terminal) && Objects.equals(gate, that.gate) && Objects.equals(baggage, that.baggage) && Objects.equals(scheduled, that.scheduled) && Objects.equals(estimated, that.estimated) && Objects.equals(actual, that.actual) && Objects.equals(estimatedRunway, that.estimatedRunway) && Objects.equals(actualRunway, that.actualRunway);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(airport, timezone, iata, icao, terminal, gate, scheduled, estimated, actual, estimatedRunway, actualRunway);
+        return Objects.hash(airportId, timezone, iata, icao, terminal, gate, baggage, scheduled, estimated, actual, estimatedRunway, actualRunway);
     }
 }

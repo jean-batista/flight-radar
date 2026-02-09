@@ -1,10 +1,15 @@
 package com.flightradarmsn.flightradar.service;
 
-import com.flightradarmsn.flightradar.model.dto.FlightPlanDTO;
-import com.flightradarmsn.flightradar.model.dto.FlightPlanMinDTO;
-import com.flightradarmsn.flightradar.model.dto.SearchFlightDTO;
+import com.flightradarmsn.flightradar.exceptions.ResourceNotFoundException;
+import com.flightradarmsn.flightradar.mapper.FlightPlanMapper;
+import com.flightradarmsn.flightradar.model.dto.request.FlightPlanDTO;
+import com.flightradarmsn.flightradar.model.dto.request.SearchFlightDTO;
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanMinResponseDTO;
+import com.flightradarmsn.flightradar.model.dto.response.FlightPlanResponseDTO;
 import com.flightradarmsn.flightradar.model.entities.FlightPlan;
+import com.flightradarmsn.flightradar.repository.FlightPlanRepository;
 import com.flightradarmsn.flightradar.simulation.cache.FlightPlanMemoryDatabase;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,36 +22,53 @@ import static com.flightradarmsn.flightradar.mapper.ObjectMapper.parseObject;
 public class FlightPlanService {
 
     @Autowired
-    private FlightPlanMemoryDatabase database;
+    private FlightPlanRepository repository;
 
-    public FlightPlanDTO save(FlightPlanDTO flightPlanDTO) {
-        FlightPlan entity = parseObject(flightPlanDTO, FlightPlan.class);
-        return parseObject(database.save(entity), FlightPlanDTO.class);
+    @Autowired
+    private FlightPlanMemoryDatabase memoryDatabase;
+
+    @Autowired
+    private FlightPlanMapper flightPlanMapper;
+
+    @Transactional
+    public FlightPlanResponseDTO save(FlightPlanDTO flightPlanDTO) {
+        if(flightPlanDTO == null) throw new IllegalArgumentException("Não é possivel salvar um plano de voo nulo");
+        FlightPlan entity = flightPlanMapper.flightPlanDTOToFlightPlanEntity(flightPlanDTO);
+        return parseObject(repository.save(entity), FlightPlanResponseDTO.class);
     }
 
-    public FlightPlanDTO findById(Long id) {
-        var entity = database.findFlightPlanById(id);
-        return parseObject(entity, FlightPlanDTO.class);
+    public FlightPlanResponseDTO findById(Long id) {
+        FlightPlan entity = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Não foi possível encontrar um plano de voo com o id " + id)
+        );
+        return parseObject(entity, FlightPlanResponseDTO.class);
     }
 
-    public List<FlightPlanDTO> findAll() {
-        return parseListObjects(database.findAll(), FlightPlanDTO.class);
+    public List<FlightPlanResponseDTO> findAll() {
+        return parseListObjects(repository.findAll(), FlightPlanResponseDTO.class);
     }
 
-    public List<FlightPlanMinDTO> findAllMin() {
-        return parseListObjects(database.findAll(), FlightPlanMinDTO.class);
+    public List<FlightPlanMinResponseDTO> findAllMin() {
+        return parseListObjects(repository.findAll(), FlightPlanMinResponseDTO.class);
     }
 
-    public List<FlightPlanDTO> searchFlights(SearchFlightDTO criteria) {
+    public void delete(Long id) {
+        FlightPlan flightPlan = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Não foi possível encontrar um plano de voo com o id " + id)
+        );
+        repository.delete(flightPlan);
+    }
+
+    public List<FlightPlanResponseDTO> searchFlights(SearchFlightDTO criteria) {
         // 1. Se tiver ID, busca direta
         if (criteria.getId() != null) {
-            FlightPlanDTO flight = findById(criteria.getId());
+            FlightPlanResponseDTO flight = findById(criteria.getId());
             return flight != null ? List.of(flight) : List.of();
         }
 
-        List<FlightPlanDTO> list = findAll();
+        List<FlightPlanResponseDTO> list = findAll();
 
-        return list.stream()
+        var filteredList =  list.stream()
                 // Filtro de Origem (Aeroporto OU Cidade)
                 .filter(plan -> {
                     if (criteria.getOrigin() == null || criteria.getOrigin().isBlank()) return true; // Pula se vazio
@@ -71,6 +93,11 @@ public class FlightPlanService {
                     return airlineName.contains(search);
                 })
                 .toList();
+
+        if(filteredList.isEmpty())
+            throw new ResourceNotFoundException("Não foi possível encontrar voos com os critérios fornecidos");
+
+        return filteredList;
     }
 
 }

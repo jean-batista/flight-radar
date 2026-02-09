@@ -15,6 +15,12 @@ public class Coordinates implements Serializable {
     public Coordinates() {
     }
 
+    public Coordinates(Double latitude, Double longitude, Double direction) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.direction = direction;
+    }
+
     public Double getLatitude() {
         return latitude;
     }

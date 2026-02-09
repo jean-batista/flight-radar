@@ -1,11 +1,11 @@
-package com.flightradarmsn.flightradar.model.dto;
+package com.flightradarmsn.flightradar.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class FlightDTO implements Serializable {
+public class FlightResponseDTO implements Serializable {
 
     private Integer number;
     private String iata;
@@ -15,7 +15,7 @@ public class FlightDTO implements Serializable {
     @JsonProperty(value = "cruise_altitude")
     private Integer cruiseAltitude;
 
-    public FlightDTO() {
+    public FlightResponseDTO() {
     }
 
     public Integer getNumber() {
@@ -61,8 +61,8 @@ public class FlightDTO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FlightDTO flightDTO = (FlightDTO) o;
-        return Objects.equals(number, flightDTO.number) && Objects.equals(iata, flightDTO.iata) && Objects.equals(icao, flightDTO.icao) && Objects.equals(codeshared, flightDTO.codeshared) && Objects.equals(cruiseAltitude, flightDTO.cruiseAltitude);
+        FlightResponseDTO flightResponseDTO = (FlightResponseDTO) o;
+        return Objects.equals(number, flightResponseDTO.number) && Objects.equals(iata, flightResponseDTO.iata) && Objects.equals(icao, flightResponseDTO.icao) && Objects.equals(codeshared, flightResponseDTO.codeshared) && Objects.equals(cruiseAltitude, flightResponseDTO.cruiseAltitude);
     }
 
     @Override
